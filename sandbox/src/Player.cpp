@@ -59,7 +59,6 @@ void Player::OnImGui() {
     ImGui::Text("X Coord: %f", m_X);
     ImGui::Text("Y Coord: %f", m_Y);
 
-
     std::shared_ptr<Freeze::Physics::DynamicBody> body;
 
     if (ImGui::Button("Create new body (DYNAMIC)")) {

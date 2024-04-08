@@ -27,7 +27,7 @@ namespace Freeze {
         // Required for the shader so that positions and rotation works!
         const glm::mat4 GetProjectionViewMatrix() const { return m_ProjectionViewMatrix; }
 
-        inline glm::vec4 GetCameraBounds() const { return m_CameraBounds; }
+        static glm::vec4 GetCameraBounds() { return m_CameraBounds; }
 
         void CalculateViewMatrix();
         void Update();
@@ -38,7 +38,7 @@ namespace Freeze {
       glm::mat4 m_ViewMatrix;
       glm::mat4 m_ProjectionViewMatrix;
 
-      glm::vec4 m_CameraBounds; 
+      static glm::vec4 m_CameraBounds; 
 
       glm::vec3 m_Position = glm::vec3(0.0f, 0.0f, 0.0f);
       float m_Rotation = 0.0f;

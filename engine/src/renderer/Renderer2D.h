@@ -12,7 +12,6 @@
 
 namespace Freeze {
 
-  
   class RenderCommands
   {
   public:
@@ -40,7 +39,6 @@ namespace Freeze {
     void RenderQuad(const glm::mat4& projectionMatrix, const glm::vec2& positions, const glm::vec4& color);
 
     glm::vec2 GetQuadPositions() { return m_Positions; }
-    glm::vec4 GetCamBounds() { return m_CamBounds; }
 
     ~FreezeQuad();
 
@@ -48,7 +46,6 @@ namespace Freeze {
     QuadRendererData* m_QuadRendererData;
     glm::vec2 m_Positions;
     std::shared_ptr<Freeze::Camera> m_Camera = std::make_shared<Freeze::Camera>();
-    glm::vec4 m_CamBounds;
   };
 
   class FreezeTriangle

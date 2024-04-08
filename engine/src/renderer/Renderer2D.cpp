@@ -15,7 +15,6 @@ namespace Freeze {
   ///////////////////////// Quad Rendering //////////////////////////////////
 
   FreezeQuad::FreezeQuad()
-    : m_CamBounds(m_Camera->GetCameraBounds())
   {
     m_QuadRendererData = new QuadRendererData();
   }
