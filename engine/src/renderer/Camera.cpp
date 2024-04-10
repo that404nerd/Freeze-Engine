@@ -3,6 +3,7 @@
 namespace Freeze
 {
     glm::vec4 Camera::m_CameraBounds;
+    glm::mat4 Camera::m_ProjectionViewMatrix;
 
     Camera::Camera(const glm::vec4 &camBounds)
         : m_ProjectionMatrix(glm::ortho(camBounds.x, camBounds.y, camBounds.z, camBounds.w, -1.0f, 1.0f)), // Create a ortho camera

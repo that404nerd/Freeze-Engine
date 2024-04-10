@@ -26,7 +26,7 @@ void Player::CreateEntity() {
         m_PhysicsEntity1->SetFriction(0.3f);
         m_PhysicsEntity1->SetDensity(0.3f);
         m_PhysicsEntity1->SetRestitution(0.4f);
-        m_PhysicsEntity1->CreateBody({5.0f, 5.0f}, {x + 4.0f, y + 3.0f});
+        m_PhysicsEntity1->CreateBody({50.0f, 50.0f}, {x + 4.0f, y + 3.0f});
     }
 
     // FZ_INFO("Before deleting: {}",

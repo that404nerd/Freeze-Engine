@@ -44,7 +44,10 @@ namespace Freeze {
 
     void DynamicBody::RenderBody(const glm::mat4& projectionMatrix, const glm::vec4& color)
     {
-
+      for(auto& dynBody : m_DynamicBodies)
+      {
+        dynBody->m_Quad->RenderQuad(projectionMatrix, { dynBody->Body->GetPosition().x,  dynBody->Body->GetPosition().y }, color);
+      } 
     }
 
     void DynamicBody::DeleteBody()

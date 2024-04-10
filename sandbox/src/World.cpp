@@ -39,7 +39,7 @@ void World::RenderPlatform()
 
 void World::Update(GLFWwindow *window, float deltaTime)
 {
-  // RenderPlatform();
+  RenderPlatform();
 
   float MAX_CAM_SPEED = 400.0f;
 
@@ -54,7 +54,7 @@ void World::Update(GLFWwindow *window, float deltaTime)
     m_Camera->SetPosition({m_CamSpeed += MAX_CAM_SPEED * deltaTime, 0.0f, 0.0f});
   }
 
-  // m_Player->RenderEntity(m_Camera->GetProjectionViewMatrix());
+  m_Player->RenderEntity(m_Camera->GetProjectionViewMatrix());
 }
 
 World::~World() {}

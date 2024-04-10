@@ -45,7 +45,6 @@ namespace Freeze {
   private:
     QuadRendererData* m_QuadRendererData;
     glm::vec2 m_Positions;
-    std::shared_ptr<Freeze::Camera> m_Camera = std::make_shared<Freeze::Camera>();
   };
 
   class FreezeTriangle
