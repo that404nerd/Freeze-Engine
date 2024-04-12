@@ -28,10 +28,6 @@ public:
 
     ~Player();
 private:
-    std::shared_ptr<Freeze::FreezeQuad> m_FreezeQuad = std::make_shared<Freeze::FreezeQuad>();
-    std::shared_ptr<Freeze::FreezeTriangle> m_FreezeTriangle = std::make_shared<Freeze::FreezeTriangle>();
-
-    
     std::shared_ptr<Freeze::Physics::DynamicBody> m_PhysicsEntity; // dynamic
     std::shared_ptr<Freeze::Physics::DynamicBody> m_PhysicsEntity1; // dynamic
 

@@ -1,9 +1,9 @@
 #version 420 core
 
 out vec4 o_QuadColor;
-uniform vec4 u_Color;
+in vec4 f_Color;
 
 void main()
 {
-    o_QuadColor = vec4(u_Color);
+    o_QuadColor = f_Color;
 }

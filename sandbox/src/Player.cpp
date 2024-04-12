@@ -7,33 +7,12 @@ Player::Player() : Entity("Player"), m_X(0.0f), m_Y(0.0f) {
 }
 
 void Player::CreateEntity() {
-    ///////////// 2D BODY (NOT BOX2D) ////////////////////
-    // m_FreezeQuad->CreateQuad(440.0f, 300.0f, "", ""); // TODO: "" -> //
-    // DEFAULT_SHADERS
-    /////////////////////////////////////////////////////
-
-    ////////// BOX2D QUAD //////////////////
-
-    float x = 0.0f;
-    float y = 20.0f;
-
-    m_PhysicsEntity->SetFriction(0.3f);
-    m_PhysicsEntity->SetDensity(0.3f);
-    m_PhysicsEntity->SetRestitution(0.6f);
-    m_PhysicsEntity->CreateBody({10.0f, 10.0f}, {x, y});
-
     for (int i = 0; i < 4; i++) {
         m_PhysicsEntity1->SetFriction(0.3f);
         m_PhysicsEntity1->SetDensity(0.3f);
         m_PhysicsEntity1->SetRestitution(0.4f);
-        m_PhysicsEntity1->CreateBody({50.0f, 50.0f}, {x + 4.0f, y + 3.0f});
+        m_PhysicsEntity1->CreateBody({0.5f, 0.5f}, {0.2 + 0.4f, 0.2 + 0.3f});
     }
-
-    // FZ_INFO("Before deleting: {}",
-    // Freeze::Physics::DynamicBody::GetTotalDynamicBodies());
-    // m_PhysicsEntity1->DeleteBody((b2Body*)this);
-    // FZ_INFO("After deleting: {}",
-    // Freeze::Physics::DynamicBody::GetTotalDynamicBodies());
 }
 
 void Player::MovePlayer(GLFWwindow *window, float dt) {
@@ -58,25 +37,17 @@ void Player::OnImGui() {
 
     ImGui::Text("X Coord: %f", m_X);
     ImGui::Text("Y Coord: %f", m_Y);
-
-    std::shared_ptr<Freeze::Physics::DynamicBody> body;
-
-    if (ImGui::Button("Create new body (DYNAMIC)")) {
-        body = std::make_shared<Freeze::Physics::DynamicBody>();
-        body->SetFriction(0.4f);
-        body->SetDensity(0.5f);
-        body->SetRestitution(0.6f);
-
-        body->CreateBody({5.0f, 5.0f}, {0.0f, 0.0f});
-    }
-
-    if (ImGui::Button("Delete dynamic body")) {
-        body->DeleteBody();
-    }
 }
 
 void Player::RenderEntity(const glm::mat4 &projectionMatrix) {
-    m_PhysicsEntity->RenderBody(projectionMatrix, {0.4f, 0.1f, 0.7f, 1.0f});
+    m_PhysicsEntity->RenderBody({0.4f, 0.1f, 0.7f, 1.0f});
+
+
+    Freeze::Renderer2D::DrawQuad({ 0.3f, 0.4f }, { 0.2f, 0.2f },{ 0.4f, 0.2f, 0.3f, 1.0f });
+    Freeze::Renderer2D::DrawQuad({ 0.4f, 0.7f }, { 0.2f, 0.2f }, { 0.4f, 0.2f, 0.2f, 1.0f});
+
+    Freeze::Renderer2D::DrawTriangle({ 0.5f, 0.6f }, { 0.2f, 0.2f }, { 0.2f, 0.5f, 0.1f, 1.0f });
+
 }
 
 Player::~Player() {}

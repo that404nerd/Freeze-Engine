@@ -2,7 +2,7 @@
 
 #include <GL/glew.h>
 
-#include "../core/Core.h"
+#include "core/Core.h"
 
 #include <cstdint>
 
@@ -12,7 +12,10 @@ namespace Freeze {
     public:
         VertexBuffer() = default;
 
-        void AddVertexBuffer(float* data, uint32_t size, GLenum drawType);
+        void AddVertexBuffer(const void* data, uint32_t size);
+        void AddVertexBuffer(uint32_t size, GLenum drawType);
+
+        void SetVertexBufferData(const void* data, uint32_t size);
 
         void BindVertexBuffer() const;
         void UnbindVertexBuffer() const;
@@ -22,18 +25,36 @@ namespace Freeze {
         uint32_t m_VertexBufferObjectID;
     };
 
-    class ElementBuffer
+    class IndexBuffer
     {
     public:
-        ElementBuffer() = default;
+        IndexBuffer() = default;
 
-        void AddElementBuffer(uint32_t* data, uint32_t size, GLenum drawType);
+        void AddIndexBuffer(uint32_t* data, uint32_t size, GLenum drawType);
 
-        void BindElementBuffer() const;
-        void UnbindElementBuffer() const;
+        void BindIndexBuffer() const;
+        void UnbindIndexBuffer() const;
 
-        ~ElementBuffer();
+        ~IndexBuffer();
     private:
-        uint32_t m_ElementBufferObjectID;
+        uint32_t m_IndexBufferObjectID;
+    };
+
+    class VertexArray
+    {
+    public:
+        VertexArray() = default;
+
+        void AddVertexArray();
+
+        void BindVertexArray() const;
+        void UnbindVertexArray() const;
+
+        uint32_t GetVertexArrayID() { return m_VertexArrayID; }
+
+        ~VertexArray();
+
+    private:
+        uint32_t m_VertexArrayID;
     };
 };

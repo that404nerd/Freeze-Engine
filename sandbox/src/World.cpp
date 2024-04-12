@@ -1,7 +1,7 @@
 #include "World.h"
 
 World::World()
-    : m_Camera(std::make_shared<Freeze::Camera>(glm::vec4(0.0f, 960.0f, 0.0f, 540.0f)))
+    : m_Camera(std::make_shared<Freeze::Camera>(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)))
                                                          // left, right, bottom, top
 {
 }
@@ -14,8 +14,6 @@ void World::Init()
 
 void World::InitPlatformData()
 {
-  // Initialise the platform data
-  m_Platform->CreateBody({50.0f, 10.0f}, {0.0f, -25.0f});
 }
 
 void World::OnImGui()
@@ -34,7 +32,7 @@ void World::OnImGui()
 
 void World::RenderPlatform()
 {
-  m_Platform->RenderBody(m_Camera->GetProjectionViewMatrix(), {1.0f, 1.0f, 1.0f, 1.0f});
+  m_Platform->RenderBody({1.0f, 1.0f, 1.0f, 1.0f});
 }
 
 void World::Update(GLFWwindow *window, float deltaTime)

@@ -11,6 +11,9 @@ namespace Freeze
 
     InitGLEW();
     SetEngineViewport();
+    // EnableOpenGLDebug();
+    Renderer2D::InitRenderer();
+
     m_ImGuiContext->CreateImGuiContext(m_Window->GetWindowInstance());
 
     Physics::PhysicsModule::InitPhysicsWorld();
@@ -25,15 +28,16 @@ namespace Freeze
 
     while (!glfwWindowShouldClose(m_Window->GetWindowInstance()))
     {
-
       float currentFrame = glfwGetTime();
       float deltaTime = currentFrame - lastFrame;
       lastFrame = currentFrame;
 
       m_Sandbox->OnEvent(m_Window->GetWindowInstance(), deltaTime);
 
-      Freeze::RenderCommands::SetRenderColor(glm::vec4(0.161, 0.161, 0.133, 1.0f));
-      Freeze::RenderCommands::RenderClear();
+      RenderCommands::SetRenderColor(glm::vec4(0.161, 0.161, 0.133, 1.0f));
+      RenderCommands::RenderClear();
+
+      Renderer2D::StartBatch();
 
       // ALWAYS UPDATE IMGUI BEFORE DOING SANDBOX STUFF!!!
       m_ImGuiContext->UpdateImGui();
@@ -44,12 +48,15 @@ namespace Freeze
 
       m_Sandbox->OnUpdate(m_Window->GetWindowInstance(), deltaTime);
 
+      Renderer2D::Flush();
+
       // Render ImGui Stuff
       m_ImGuiContext->RenderImGui();
 
       // Then swap the buffers and check for events
       glfwSwapBuffers(m_Window->GetWindowInstance());
       glfwPollEvents();
+
     }
   }
 
@@ -73,6 +80,7 @@ namespace Freeze
 
   Application::~Application()
   {
+    Renderer2D::ShutdownRenderer();
     Physics::PhysicsModule::DestroyPhysicsWorld();
   }
 

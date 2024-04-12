@@ -2,11 +2,6 @@
 
 namespace Freeze
 {
-    Shader::Shader()
-    {
-    }
-
-
     void Shader::LoadShaders(const std::string& vertexShader, const std::string& fragmentShader)
     {
         const GLchar* vertexSource = vertexShader.c_str();
@@ -21,7 +16,7 @@ namespace Freeze
         if (!resultVertex)
         {
             glGetShaderInfoLog(m_VertexShader, 1024, nullptr, infoVertex);
-            spdlog::error("Failed to compile vertex shader {}", infoVertex);
+            FZ_ERROR("Failed to compile vertex shader {}", infoVertex);
         }
 
         const GLchar* fragmentSource = fragmentShader.c_str();
@@ -36,7 +31,7 @@ namespace Freeze
         if (!resultFragment)
         {
             glGetShaderInfoLog(m_FragmentShader, 1024, nullptr, infoFragment);
-            spdlog::error("Failed to compile fragment shader {} ", infoFragment);
+            FZ_ERROR("Failed to compile fragment shader {} ", infoFragment);
         }
 
         m_ShaderProgramID = glCreateProgram();
@@ -73,7 +68,7 @@ namespace Freeze
         }
         catch (std::ifstream::failure& e)
         {
-            FZ_INFO("Shader file failed to read! {}", e.what());
+            FZ_ERROR("Shader file failed to read! {}", e.what());
         }
 
         const GLchar* vertexSource = vertexCode.c_str();
@@ -88,7 +83,7 @@ namespace Freeze
         if (!resultVertex)
         {
             glGetShaderInfoLog(m_VertexShader, 1024, nullptr, infoVertex);
-            spdlog::error("Failed to compile vertex shader {}", infoVertex);
+            FZ_ERROR("Failed to compile vertex shader {}", infoVertex);
         }
 
         const GLchar* fragmentSource = fragmentCode.c_str();
@@ -103,13 +98,29 @@ namespace Freeze
         if (!resultFragment)
         {
             glGetShaderInfoLog(m_FragmentShader, 1024, nullptr, infoFragment);
-            spdlog::error("Failed to compile fragment shader {} ", infoFragment);
+            FZ_ERROR("Failed to compile fragment shader {} ", infoFragment);
         }
 
         m_ShaderProgramID = glCreateProgram();
         glAttachShader(m_ShaderProgramID, m_VertexShader);
         glAttachShader(m_ShaderProgramID, m_FragmentShader);
         glLinkProgram(m_ShaderProgramID);
+
+        GLint isLinked = 0;
+        glGetProgramiv(m_ShaderProgramID, GL_LINK_STATUS, &isLinked);
+        if (isLinked == GL_FALSE)
+        {
+            GLint maxLength = 0;
+            glGetProgramiv(m_ShaderProgramID, GL_INFO_LOG_LENGTH, &maxLength);
+
+            std::vector<GLchar> errorLog(maxLength);
+            glGetProgramInfoLog(m_ShaderProgramID, maxLength, &maxLength, &errorLog[0]);
+
+            FZ_ERROR("Shader Program failed to link: {}", &errorLog[0]);
+
+            glDeleteProgram(m_ShaderProgramID);
+            return;
+        }
     }
 
     void Shader::UseShader()
@@ -153,9 +164,12 @@ namespace Freeze
         glUniform1i(m_GetUniformLocation, index);
     }
 
-    Shader::~Shader()
+    // I know, Renderer2D causes double deletion of shader and its bad.... (THIS IS PERMANENT)
+    void Shader::DeleteShaders()
     {
-        glDeleteShader(m_VertexShader);
-        glDeleteShader(m_FragmentShader);
+        glDeleteProgram(m_ShaderProgramID);
+        glDeleteShader(m_VertexShader);        
+        glDeleteShader(m_FragmentShader);        
     }
+
 };

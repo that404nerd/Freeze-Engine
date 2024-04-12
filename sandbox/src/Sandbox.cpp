@@ -4,8 +4,6 @@ Sandbox::Sandbox() {}
 
 void Sandbox::OnInit()
 {
-    Freeze::EnableOpenGLDebug();
-
     // Load World Data First
     m_World->Init();
 }

@@ -1,5 +1,7 @@
 #include "Sprite.h"
 
+// TODO: Integrate into the 2D Renderer
+
 namespace Freeze {
   Sprite::Sprite(std::shared_ptr<Shader> shader)
     :m_Shader(shader)
@@ -22,11 +24,10 @@ namespace Freeze {
       1.0f, 0.0f,             1.0f, 0.0f
     };
 
-    // Generate an vertex array using Freeze::VertexArray API
-    m_VertexArray->AddVertexArray(1);
+    m_VertexArray->AddVertexArray();
     m_VertexArray->BindVertexArray();
 
-    m_VertexBuffer->AddVertexBuffer(spriteVertices, sizeof(spriteVertices), GL_STATIC_DRAW);
+    m_VertexBuffer->AddVertexBuffer(spriteVertices, sizeof(spriteVertices));
     m_VertexBuffer->BindVertexBuffer();
 
     glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 16, (void*)0);
@@ -70,5 +71,6 @@ namespace Freeze {
 
   Sprite::~Sprite()
   {
+    m_Shader->DeleteShaders();
   }
 };

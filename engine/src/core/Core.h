@@ -27,7 +27,9 @@
     #define FZ_ERROR(x, ...) spdlog::error(x, ##__VA_ARGS__)
 
     #ifdef __linux__
-        #define FZ_ASSERT(x, ...) {FZ_ERROR(x, ##__VA_ARGS__); raise(SIGTRAP);}
+        #include <signal.h>
+        #define FZ_ASSERTM(x, ...) {FZ_ERROR(x, ##__VA_ARGS__); raise(SIGTRAP);}
+        #define FZ_ASSERT(x) { FZ_ERROR(x); raise(SIGTRAP); }
     #else
         // For MSVC
         #define FZ_ASSERT(x, ...) {FZ_ERROR(x, ##__VA_ARGS__); __debugbreak();}
@@ -48,6 +50,7 @@ namespace Freeze {
         }
     };
 
+   // TODO: Move this stuff to PhysicsBody class
    inline float MetersPerPixelFactor = 32.0f;
 
    inline float PixelToMeter(const float value) { return (value * (1.0f / MetersPerPixelFactor)); }

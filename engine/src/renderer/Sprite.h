@@ -3,7 +3,6 @@
 #include "Shader.h"
 #include "Texture.h"
 #include "Buffer.h"
-#include "VertexArray.h"
 
 #include <glm/glm.hpp>
 #include <memory>

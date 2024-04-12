@@ -34,7 +34,7 @@ namespace Freeze
             {
                 m_PhysicsWorld->Step(1.0f / 60.0f, 6, 3);
 
-                m_PhysicsWorld->DebugDraw();
+               // m_PhysicsWorld->DebugDraw();
             }
 
             inline b2World* GetPhysicsWorld() { return m_PhysicsWorld; }
