@@ -4,8 +4,8 @@
 - [x] Make delta time work!
 - [x] Make camera work with the Input System (No plans for API abstraction yet)
 - [x] Batch Rendering
+- [x] Rewrite the Physics API to support the new 2D Renderer
 
-- [] Rewrite the Physics API to support the new 2D Renderer
 - [] Create functions to manage movement of camera (including rotation)
 - [] Abstract glVertexAttribPointer for setting vertex data easily
 - [] Make an Event System

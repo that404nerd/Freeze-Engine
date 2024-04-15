@@ -5,7 +5,6 @@ namespace Freeze {
   namespace Physics {
     
    // Static members initialisation
-   std::vector<b2Body*> DynamicBody::m_DynamicBodies;
    std::vector<b2Body*> StaticBody::m_StaticBodies;
 
     ////////////////////// DYNAMIC BODY ///////////////////////
@@ -14,39 +13,60 @@ namespace Freeze {
     {
     }
 
-    void DynamicBody::CreateBody(const b2Vec2& size, const b2Vec2& positions)
-    {
-      m_DynamicBodyData = new DynamicBodyData();
-      m_DynamicBodyData->Size = b2Vec2(size.x, size.y);
-      b2Vec2 halfBodySize = b2Vec2(m_DynamicBodyData->Size.x * 0.5f, m_DynamicBodyData->Size.y * 0.5f);
-      m_DynamicBodyData->Positions = b2Vec2(positions.x, positions.y);
-      
-      m_DynamicBodyData->BodyDef.type = b2_dynamicBody;
-      m_DynamicBodyData->BodyDef.position = m_DynamicBodyData->Positions;
-      
-      m_DynamicBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&m_DynamicBodyData->BodyDef);
-      
-      m_DynamicBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y);
+    void DynamicBody::CreateBody(const b2Vec2& size, const b2Vec2& position) {
+        // Create a new DynamicBodyData instance
+        DynamicBodyData* newBodyData = new DynamicBodyData();
 
-      m_DynamicBodyData->FixtureDef.shape = &m_DynamicBodyData->Shape;
+        // Initialize size and position
+        newBodyData->Size = size;
+        newBodyData->Positions = position;
 
-      m_DynamicBodyData->FixtureDef.density = m_Density;
-      m_DynamicBodyData->FixtureDef.friction = m_Friction;
-      m_DynamicBodyData->FixtureDef.restitution = m_Restitution;
-      
-      m_DynamicBodyData->Body->CreateFixture(&m_DynamicBodyData->FixtureDef);
-       
-      m_DynamicBodies.push_back(m_DynamicBodyData->Body);
+        // Calculate half body size
+        b2Vec2 halfBodySize = b2Vec2(size.x * 0.5f, size.y * 0.5f);
+
+        // Configure body definition
+        newBodyData->BodyDef.type = b2_dynamicBody;
+        newBodyData->BodyDef.position = position;
+
+        // Create body in physics world
+        newBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&newBodyData->BodyDef);
+
+        // Set shape as a box
+        newBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y);
+
+        // Configure fixture definition
+        newBodyData->FixtureDef.shape = &newBodyData->Shape;
+        newBodyData->FixtureDef.density = m_Density;
+        newBodyData->FixtureDef.friction = m_Friction;
+        newBodyData->FixtureDef.restitution = m_Restitution;
+
+        // Create fixture
+        newBodyData->Body->CreateFixture(&newBodyData->FixtureDef);
+
+        // Add new body data to the linked list
+        if (!m_Head) {
+            m_Head = newBodyData;
+        } else {
+            // Find the last node and append newBodyData
+            DynamicBodyData* current = m_Head;
+            while (current->next)
+                current = current->next;
+            current->next = newBodyData;
+        }
     }
 
-    void DynamicBody::RenderBody(const glm::vec4& color)
-    {
-      for(auto& dynBody : m_DynamicBodies)
-      {
-        FZ_INFO("Box2D positions: {}, {}", dynBody->GetPosition().x, dynBody->GetPosition().y);
-        FZ_INFO("Rendered positions: {}, {}", dynBody->GetPosition().x, dynBody->GetPosition().y);
-        Freeze::Renderer2D::DrawQuad({ dynBody->GetPosition().x, dynBody->GetPosition().y }, { m_DynamicBodyData->Size.x, m_DynamicBodyData->Size.y }, color);
-      } 
+
+    void DynamicBody::RenderBody(const glm::vec4& color) {
+      DynamicBodyData* current = m_Head;
+      while (current) {
+          // Access position and size from DynamicBodyData and render the body
+          b2Vec2 position = current->Body->GetPosition();
+          b2Vec2 size = current->Size;
+          Freeze::Renderer2D::DrawQuad({ position.x, position.y }, { size.x, size.y }, color);
+          
+          // Move to the next node in the linked list
+          current = current->next;
+      }
     }
 
     void DynamicBody::DeleteBody()
@@ -56,6 +76,12 @@ namespace Freeze {
 
     DynamicBody::~DynamicBody()
     {
+      DynamicBodyData* current = m_Head;
+        while (current) {
+            DynamicBodyData* next = current->next;
+            delete current;
+            current = next;
+        }
     }
     
 

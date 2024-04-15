@@ -13,14 +13,6 @@ namespace Freeze {
 
     namespace Physics {
 
-        inline float MetersPerPixelFactor = 32.0f;
-
-        inline float PixelToMeter(const float value) { return (value * (1.0f / MetersPerPixelFactor)); }
-        inline b2Vec2 PixelToMeter(const b2Vec2& vector) { return b2Vec2(PixelToMeter(vector.x), PixelToMeter(vector.y)); }
-
-        inline float MeterToPixel(const float value) { return (value * MetersPerPixelFactor); }
-        inline b2Vec2 MeterToPixel(const b2Vec2& vector) { return b2Vec2(MeterToPixel(vector.x), MeterToPixel(vector.y)); }
-        
         class PhysicsBody {
         public:
             virtual void CreateBody(const b2Vec2& size, const b2Vec2& positions) = 0;
@@ -54,16 +46,16 @@ namespace Freeze {
                 b2PolygonShape Shape;
                 std::string BodyID;
 
-                b2Vec2 Positions;
-                b2Vec2 Size;
+                b2Vec2 Positions = { 0.0f, 0.0f };
+                b2Vec2 Size = { 0.0f, 0.0f };
+
+                DynamicBodyData* next;
             };
 
-            DynamicBodyData* m_DynamicBodyData = nullptr;
+            DynamicBodyData* m_Head = nullptr;
             float m_Friction;
             float m_Density;
             float m_Restitution;
-
-            static std::vector<b2Body*> m_DynamicBodies;
         };
 
         class StaticBody : public PhysicsBody {
