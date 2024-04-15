@@ -1,0 +1,18 @@
+[submodule "lib/imgui"]
+	path = lib/imgui
+	url = https://github.com/ocornut/imgui.git
+[submodule "lib/spdlog"]
+	path = lib/spdlog
+	url = https://github.com/gabime/spdlog.git
+[submodule "lib/stb_image"]
+	path = lib/stb_image
+	url = https://github.com/nothings/stb.git
+[submodule "lib/glm"]
+	path = lib/glm
+	url = https://github.com/g-truc/glm.git
+[submodule "lib/ImGuiFileDialog"]
+	path = lib/ImGuiFileDialog
+	url = https://github.com/aiekick/ImGuiFileDialog
+[submodule "lib/box2d"]
+	path = lib/box2d
+	url = https://github.com/systemcoding/box2d.git

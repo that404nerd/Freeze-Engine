@@ -1,0 +1,3 @@
+**/build/
+**/.cache
+engine/src/include/core/root_dir.h
