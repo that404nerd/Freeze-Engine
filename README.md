@@ -32,6 +32,3 @@ make -j5
 ./bin/Sandbox
 ```
 Also for debugging, compile with this: `cmake -DCMAKE_BUILD_TYPE=Debug ..`
-
-## WARNING:
-This branch is meant for testing purposes, currently i am testing box2d and the main branch implementation doesn't work well. Please report any bugs!
