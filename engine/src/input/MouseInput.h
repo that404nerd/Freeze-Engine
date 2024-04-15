@@ -1,5 +1,7 @@
 #pragma once
 
+#include "core/Window.h"
+
 #include <GLFW/glfw3.h>
 
 #include <array>

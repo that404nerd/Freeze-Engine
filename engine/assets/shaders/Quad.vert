@@ -9,6 +9,6 @@ uniform mat4 a_ProjectionMatrix;
 
 void main()
 {
-    gl_Position = vec4(a_QuadPos, 1.0f);
+    gl_Position = a_ProjectionMatrix * vec4(a_QuadPos, 1.0f);
     f_Color = a_QuadColor;
 }

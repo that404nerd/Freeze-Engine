@@ -16,6 +16,8 @@ namespace Freeze {
     class Camera {
     public:
         Camera() {};
+        
+        // Left, right, bottom, top
         Camera(const glm::vec4& camPos);
 
         void SetPosition(const glm::vec3& position) { m_Position = position; CalculateViewMatrix(); }

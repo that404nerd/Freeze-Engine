@@ -11,7 +11,7 @@ namespace Freeze
 
     InitGLEW();
     SetEngineViewport();
-    // EnableOpenGLDebug();
+    EnableOpenGLDebug();
     Renderer2D::InitRenderer();
 
     m_ImGuiContext->CreateImGuiContext(m_Window->GetWindowInstance());
@@ -32,7 +32,7 @@ namespace Freeze
       float deltaTime = currentFrame - lastFrame;
       lastFrame = currentFrame;
 
-      m_Sandbox->OnEvent(m_Window->GetWindowInstance(), deltaTime);
+      m_Sandbox->OnEvent( deltaTime);
 
       RenderCommands::SetRenderColor(glm::vec4(0.161, 0.161, 0.133, 1.0f));
       RenderCommands::RenderClear();
@@ -46,7 +46,7 @@ namespace Freeze
 
       Physics::PhysicsModule::UpdatePhysicsWorld(deltaTime);
 
-      m_Sandbox->OnUpdate(m_Window->GetWindowInstance(), deltaTime);
+      m_Sandbox->OnUpdate(deltaTime);
 
       Renderer2D::Flush();
 

@@ -1,9 +1,10 @@
 #include "Window.h"
-#include "Core.h"
 
 namespace Freeze
 {
     GLFWwindow *Window::m_Window;
+    uint32_t Window::m_Width;
+    uint32_t Window::m_Height;
 
     Window::Window()
     {

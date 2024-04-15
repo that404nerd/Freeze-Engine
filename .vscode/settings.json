@@ -85,4 +85,5 @@
         "ranges": "cpp"
     },
     "cmake.configureOnOpen": true,
+    "C_Cpp.errorSquiggles": "enabled",
 }

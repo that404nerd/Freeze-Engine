@@ -1,8 +1,7 @@
 #include "World.h"
 
 World::World()
-    : m_Camera(std::make_shared<Freeze::Camera>(glm::vec4(0.0f, 0.0f, 0.0f, 0.0f)))
-                                                         // left, right, bottom, top
+      :m_Camera(std::make_shared<Freeze::Camera>(glm::vec4(-16.0f, 16.0f, -9.0f, 9.0f)))
 {
 }
 
@@ -14,6 +13,7 @@ void World::Init()
 
 void World::InitPlatformData()
 {
+  m_Platform->CreateBody({ 20.0f, 1.0f }, { 0.0f, 0.0f });
 }
 
 void World::OnImGui()
@@ -21,13 +21,8 @@ void World::OnImGui()
   ImGui::SliderFloat("Camera Rotation", &m_CamRotationDefVal, 0.0f, 360.0f);
   m_Camera->SetRotation(m_CamRotationDefVal);
 
-  float camPosfl[2] = {m_CamDefPos.x, m_CamDefPos.y}; // fl -> float
-  if (ImGui::SliderFloat2("Camera Position", camPosfl, -500.0f, 500.0f))
-    m_Camera->SetPosition({camPosfl[0], camPosfl[1], 0.0f});
-
   ImGui::Text("Cam X Coordinate: %f", m_Camera->GetPosition().x);
   ImGui::Text("Cam Y Coordinate: %f", m_Camera->GetPosition().y);
-  ImGui::Text("Cam Z Coordinate: %f", m_Camera->GetPosition().z);
 }
 
 void World::RenderPlatform()
@@ -35,24 +30,24 @@ void World::RenderPlatform()
   m_Platform->RenderBody({1.0f, 1.0f, 1.0f, 1.0f});
 }
 
-void World::Update(GLFWwindow *window, float deltaTime)
+void World::Update(float deltaTime)
 {
   RenderPlatform();
 
-  float MAX_CAM_SPEED = 400.0f;
+  float MAX_CAM_SPEED = 10.0f;
 
   /* Camera movement testing */
 
-  if (Freeze::KeyboardInput::IsKeyPressed(window, GLFW_KEY_PAGE_DOWN))
+  if (Freeze::KeyboardInput::IsKeyPressed(GLFW_KEY_A))
   {
     m_Camera->SetPosition({m_CamSpeed -= MAX_CAM_SPEED * deltaTime, 0.0f, 0.0f});
   }
-  if (Freeze::KeyboardInput::IsKeyPressed(window, GLFW_KEY_PAGE_UP))
+  if (Freeze::KeyboardInput::IsKeyPressed(GLFW_KEY_D))
   {
     m_Camera->SetPosition({m_CamSpeed += MAX_CAM_SPEED * deltaTime, 0.0f, 0.0f});
   }
 
-  m_Player->RenderEntity(m_Camera->GetProjectionViewMatrix());
+  m_Player->RenderEntity();
 }
 
 World::~World() {}

@@ -1,23 +1,26 @@
 #include "KeyboardInput.h"
 
 namespace Freeze {
-KeyboardInput::KeyboardInput() {}
 
-bool KeyboardInput::IsKeyPressed(GLFWwindow *window, int scancode) {
-  if (glfwGetKey(window, scancode) == GLFW_PRESS) {
-    return true;
+  bool KeyboardInput::IsKeyPressed(int scancode) 
+  {
+    if (glfwGetKey(Window::GetWindowInstance(), scancode) == GLFW_PRESS) 
+    {
+      return true;
+    }
+
+    return false;
   }
 
-  return false;
-}
+  bool KeyboardInput::IsKeyRepeated(int scancode) 
+  {
+    if (glfwGetKey(Window::GetWindowInstance(), scancode) == GLFW_REPEAT) 
+    {
+      return true;
+    }
 
-bool KeyboardInput::IsKeyRepeated(GLFWwindow *window, int scancode) {
-  if (glfwGetKey(window, scancode) == GLFW_REPEAT) {
-    return true;
+    return false;
   }
 
-  return false;
-}
-
-KeyboardInput::~KeyboardInput() {}
-};  // namespace Freeze
+  KeyboardInput::~KeyboardInput() {}
+}; 

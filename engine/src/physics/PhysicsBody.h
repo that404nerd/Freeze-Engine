@@ -6,16 +6,25 @@
 #include <string>
 
 #include "renderer/Renderer2D.h"
+#include "core/Core.h"
 #include "InitPhysics.h"
 
 namespace Freeze {
 
     namespace Physics {
+
+        inline float MetersPerPixelFactor = 32.0f;
+
+        inline float PixelToMeter(const float value) { return (value * (1.0f / MetersPerPixelFactor)); }
+        inline b2Vec2 PixelToMeter(const b2Vec2& vector) { return b2Vec2(PixelToMeter(vector.x), PixelToMeter(vector.y)); }
+
+        inline float MeterToPixel(const float value) { return (value * MetersPerPixelFactor); }
+        inline b2Vec2 MeterToPixel(const b2Vec2& vector) { return b2Vec2(MeterToPixel(vector.x), MeterToPixel(vector.y)); }
         
         class PhysicsBody {
         public:
             virtual void CreateBody(const b2Vec2& size, const b2Vec2& positions) = 0;
-            virtual void RenderBody(const glm::vec4& color) = 0;
+            virtual void RenderBody(const glm::vec4& color) = 0; // TODO: This is temporary, in the future the rendering needs can be done as wish in the sandbox
             virtual void DeleteBody() = 0;
             virtual ~PhysicsBody() {}
         };
@@ -49,12 +58,12 @@ namespace Freeze {
                 b2Vec2 Size;
             };
 
-            DynamicBodyData* m_BodyData = nullptr;
+            DynamicBodyData* m_DynamicBodyData = nullptr;
             float m_Friction;
             float m_Density;
             float m_Restitution;
 
-            static std::vector<DynamicBodyData*> m_DynamicBodies;
+            static std::vector<b2Body*> m_DynamicBodies;
         };
 
         class StaticBody : public PhysicsBody {
@@ -72,12 +81,13 @@ namespace Freeze {
                 b2FixtureDef FixtureDef;
                 b2PolygonShape Shape;
                 std::string BodyID;
+
+                b2Vec2 Positions;
+                b2Vec2 Size;
             };
 
-            StaticBodyData* m_BodyData;
-            b2Vec2 m_Size;
-            b2Vec2 m_Positions;
-            static std::vector<StaticBodyData*> m_StaticBodies;
+            StaticBodyData* m_StaticBodyData;
+            static std::vector<b2Body*> m_StaticBodies;
         };
 
     }

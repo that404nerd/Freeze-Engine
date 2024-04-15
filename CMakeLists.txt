@@ -66,8 +66,8 @@ include_directories(engine/src)
 add_executable(Sandbox ${SOURCES} ${IMGUI_SOURCES} ${IMGUI_BACKEND_SOURCES})
 
 # Link libraries
-target_link_libraries(Sandbox ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} glfw box2d)
-target_link_libraries(Sandbox ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${OPENAL_LIBRARIES} glfw box2d)
+target_link_libraries(Sandbox ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${OPENAL_LIBRARY} glfw box2d)
+
 
 # Set build configurations
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")

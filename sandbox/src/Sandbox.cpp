@@ -8,9 +8,9 @@ void Sandbox::OnInit()
     m_World->Init();
 }
 
-void Sandbox::OnEvent(GLFWwindow *window, float dt)
+void Sandbox::OnEvent(float dt)
 {
-    m_World->GetPlayerInstance()->MovePlayer(window, dt);    
+    m_World->GetPlayerInstance()->MovePlayer(dt);    
 }
 
 void Sandbox::OnImGui()
@@ -28,9 +28,9 @@ void Sandbox::OnImGui()
     ImGui::End();
 }
 
-void Sandbox::OnUpdate(GLFWwindow* window, float dt)
+void Sandbox::OnUpdate(float dt)
 {
-    m_World->Update(window, dt);
+    m_World->Update(dt);
 }
 
 Sandbox::~Sandbox()

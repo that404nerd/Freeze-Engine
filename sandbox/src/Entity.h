@@ -13,7 +13,7 @@ public:
     const std::string& PrintEntityName() { return m_EntityID; }
 
     virtual void CreateEntity() = 0;
-    virtual void RenderEntity(const glm::mat4& projectionMatrix) = 0;
+    virtual void RenderEntity() = 0;
 
     virtual ~Entity()
     {

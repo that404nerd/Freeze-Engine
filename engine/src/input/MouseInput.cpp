@@ -8,7 +8,7 @@ namespace Freeze
 
     bool MouseInput::IsMousePressed(GLFWwindow* window, int scancode)
     {
-        if(glfwGetMouseButton(window, scancode) == GLFW_PRESS) 
+        if(glfwGetMouseButton(Window::GetWindowInstance(), scancode) == GLFW_PRESS) 
         {
             return true;
         }
@@ -20,14 +20,14 @@ namespace Freeze
     {
         if(setCursorStatus)
         {
-            glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+            glfwSetInputMode(Window::GetWindowInstance(), GLFW_CURSOR, GLFW_CURSOR_DISABLED);
         }
     }
 
     std::pair<double, double> MouseInput::GetMouseCoords(GLFWwindow *window)
     {
         std::pair<double, double> mousePos;
-        glfwGetCursorPos(window, &mousePos.first, &mousePos.second);
+        glfwGetCursorPos(Window::GetWindowInstance(), &mousePos.first, &mousePos.second);
 
         return mousePos;
     }

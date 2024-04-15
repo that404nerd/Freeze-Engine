@@ -58,7 +58,7 @@ namespace Freeze {
   {
       // This will not happen but pointers are unpredictable....
       if (m_RendererData != nullptr)
-          FZ_ASSERT("Renderer Data Already Initialised....");
+        FZ_ASSERT("Renderer Data Already Initialised....");
 
       m_RendererData = new Renderer2DData();
 
@@ -186,7 +186,7 @@ namespace Freeze {
       m_RendererData->TriangleVertexBuffer->SetVertexBufferData(m_RendererData->TriangleVertexBufferStart, dataSize);
       m_RendererData->TriangleShader->UseShader();
 
-      // m_RendererData->TriangleShader->SetMatrix4fv(m_RendererData->TriangleShader->GetUniformLocation("a_ProjectionMatrix"), Camera::GetProjectionViewMatrix());
+      m_RendererData->TriangleShader->SetMatrix4fv(m_RendererData->TriangleShader->GetUniformLocation("a_ProjectionMatrix"), Camera::GetProjectionViewMatrix());
       m_RendererData->TriangleShader->SetVector4f(m_RendererData->TriangleShader->GetUniformLocation("f_TriangleColor"), m_RendererData->TriangleVertexBufferStart->Color);
 
       m_RendererData->TriangleVertexArray->BindVertexArray();
@@ -220,22 +220,25 @@ namespace Freeze {
       EndBatch(); // Reset the data to the beginning of the buffer
       NextBatch(); // Render what's left and start batching again
     }
+    
+    // Calculate the half-width and half-height of the rectangle
+    float halfWidth = size.x / 2.0f;
+    float halfHeight = size.y / 2.0f;
 
-    // Assuming that the left corner (the first vertex) is (0, 0)
-
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x, position.y, 0.0f };
+    // Calculate the positions of the vertices based on the provided position and size (need to follow the order below)
+    m_RendererData->QuadVertexBufferCurrent->Position = { position.x - halfWidth, position.y - halfHeight, 0.0f }; // bottom left
     m_RendererData->QuadVertexBufferCurrent->Color = color;
     m_RendererData->QuadVertexBufferCurrent++;
 
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x + size.x, position.y, 0.0f };
+    m_RendererData->QuadVertexBufferCurrent->Position = { position.x + halfWidth, position.y - halfHeight, 0.0f }; // bottom right
     m_RendererData->QuadVertexBufferCurrent->Color = color;
     m_RendererData->QuadVertexBufferCurrent++;
 
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x + size.x, position.y + size.y, 0.0f };
+    m_RendererData->QuadVertexBufferCurrent->Position = { position.x + halfWidth, position.y + halfHeight, 0.0f }; // top right
     m_RendererData->QuadVertexBufferCurrent->Color = color;
     m_RendererData->QuadVertexBufferCurrent++;
 
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x, position.y + size.y, 0.0f };
+    m_RendererData->QuadVertexBufferCurrent->Position = { position.x - halfWidth, position.y + halfHeight, 0.0f }; // top left
     m_RendererData->QuadVertexBufferCurrent->Color = color;
     m_RendererData->QuadVertexBufferCurrent++;
 
@@ -244,6 +247,12 @@ namespace Freeze {
 
   void Renderer2D::DrawTriangle(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
   { 
+    // If the index count exceeds MaxIndex (which could happen...)
+    if(m_RendererData->TriangleIndexCount >= m_RendererData->MaxTriangleIndices)
+    {
+      EndBatch(); // Reset the data to the beginning of the buffer
+      NextBatch(); // Render what's left and start batching again
+    }
 
     // Assuming that the left corner (the first vertex) is (0, 0)
     m_RendererData->TriangleVertexBufferCurrent->Position = { position.x, position.y, 0.0f };

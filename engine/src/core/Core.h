@@ -49,14 +49,4 @@ namespace Freeze {
             return newFilePath;
         }
     };
-
-   // TODO: Move this stuff to PhysicsBody class
-   inline float MetersPerPixelFactor = 32.0f;
-
-   inline float PixelToMeter(const float value) { return (value * (1.0f / MetersPerPixelFactor)); }
-   inline b2Vec2 PixelToMeter(const b2Vec2& vector) { return b2Vec2(PixelToMeter(vector.x), PixelToMeter(vector.y)); }
-
-   inline float MeterToPixel(const float value) { return (value * MetersPerPixelFactor); }
-   inline b2Vec2 MeterToPixel(const b2Vec2& vector) { return b2Vec2(MeterToPixel(vector.x), MeterToPixel(vector.y)); }
-
 };
