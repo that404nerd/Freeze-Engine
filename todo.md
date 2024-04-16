@@ -7,7 +7,7 @@
 - [x] Rewrite the Physics API to support the new 2D Renderer
 
 - [] Create functions to manage movement of camera (including rotation)
-- [] Abstract glVertexAttribPointer for setting vertex data easily
 - [] Make an Event System
 - [] Make a small entity editor (Edit it's position, rotation, etc..)
 - [] Allow for enabling Debug Render (BOX2D) in a seperate imgui window and not affect the sandbox
+- [] Abstract glVertexAttribPointer for setting vertex data easily

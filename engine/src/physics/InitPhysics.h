@@ -32,7 +32,7 @@ namespace Freeze
 
             inline void UpdatePhysicsWorld(float dt)
             {
-                m_PhysicsWorld->Step(1.0f / 60.0f, 9, 3);
+                m_PhysicsWorld->Step(1.0f / 30.0f, 8, 3);
 
                 // m_PhysicsWorld->DebugDraw();
             }

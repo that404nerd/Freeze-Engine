@@ -7,7 +7,7 @@ This engine only supports linux for now (I will extend this to windows and etc..
 - glfw
 - opengl
 - cmake
-Other dependencies will be taken care by the premake5.
+Other dependencies will be taken care by the cmake.
 
 ### C++ LSP Neovim Issue:
 If you are using neovim (or any other editor with clang lsp server) as your editor and you have clangd server enabled then follow these steps:

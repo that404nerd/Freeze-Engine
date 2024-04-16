@@ -16,14 +16,14 @@ void Player::CreateEntity() {
     }
 
     {
-        float x = 4.0f;
-        float y = 5.0f;
+        float x = -4.0f;
+        float y = 7.0f;
         for(int i = 0; i < 3; i++)
         {
             // Set properties and create body for m_PhysicsEntity1
             m_PhysicsEntity1->SetFriction(0.3f);
             m_PhysicsEntity1->SetDensity(0.3f); // You might want to set restitution here too if needed
-            m_PhysicsEntity1->SetRestitution(0.5f);
+            m_PhysicsEntity1->SetRestitution(0.8f);
             m_PhysicsEntity1->CreateBody({ 1.0f, 1.0f }, { x, y });
 
             x += 2.0f;
