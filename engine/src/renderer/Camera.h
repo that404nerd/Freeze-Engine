@@ -26,6 +26,11 @@ namespace Freeze {
         const glm::vec3& GetPosition() const { return m_Position; }
         const float GetRotation() const { return m_Rotation; }
 
+        static float GetLeft() { return m_CameraBounds.x; }
+        static float GetRight() { return m_CameraBounds.y; }
+        static float GetBottom() { return m_CameraBounds.z; }
+        static float GetTop() { return m_CameraBounds.w; }
+
         // Required for the shader so that positions and rotation works!
         static glm::mat4 GetProjectionViewMatrix() { return m_ProjectionViewMatrix; }
 

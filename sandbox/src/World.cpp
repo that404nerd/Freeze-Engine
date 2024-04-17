@@ -1,7 +1,7 @@
 #include "World.h"
 
 World::World()
-      :m_Camera(std::make_shared<Freeze::Camera>(glm::vec4(-16.0f, 16.0f, -9.0f, 9.0f)))
+      :m_Camera(std::make_shared<Freeze::Camera>(glm::vec4(-20.0f, 20.0f, -12.0f, 12.0f)))
 {
 }
 
@@ -15,7 +15,7 @@ void World::Init()
 
 void World::InitPlatformData()
 {
-  m_Platform->CreateBody({ 20.0f, 1.0f }, { 0.0f, -7.0f });
+  m_Platform->CreateBody({ 200000.0f, 1.0f }, { 0.0f, -7.0f });
 }
 
 void World::OnImGui()
@@ -28,6 +28,8 @@ void World::OnImGui()
 
   if(ImGui::Button("Play Audio"))
     Freeze::Audio::PlayAudio();
+  if(ImGui::Button("Pause Audio"))
+    Freeze::Audio::PauseAudio();
 }
 
 void World::RenderPlatform()
@@ -39,7 +41,7 @@ void World::Update(float deltaTime)
 {
   RenderPlatform();
 
-  float MAX_CAM_SPEED = 10.0f;
+  float MAX_CAM_SPEED = 30.0f;
 
   /* Camera movement testing */
 

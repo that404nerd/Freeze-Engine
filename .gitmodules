@@ -19,3 +19,6 @@
 [submodule "lib/soloud"]
 	path = lib/soloud
 	url = https://github.com/systemcoding/soloud
+[submodule "lib/freetype-gl"]
+	path = lib/freetype-gl
+	url = https://github.com/rougier/freetype-gl

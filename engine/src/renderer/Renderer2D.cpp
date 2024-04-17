@@ -212,38 +212,44 @@ namespace Freeze {
     m_RendererData->TriangleVertexBuffer->SetVertexBufferData(m_RendererData->TriangleVertexBufferStart, sizeTriangle); // Set the vertex buffer data to the beginning of the buffer
   }
 
-  void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
-  { 
+  void Renderer2D::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color) {
     // If the index count exceeds MaxIndex (which could happen...)
-    if(m_RendererData->QuadIndexCount >= m_RendererData->MaxQuadIndices)
-    {
-      EndBatch(); // Reset the data to the beginning of the buffer
-      NextBatch(); // Render what's left and start batching again
+    if (m_RendererData->QuadIndexCount + 6 >= m_RendererData->MaxQuadIndices) {
+        EndBatch(); // Reset the data to the beginning of the buffer
+        NextBatch(); // Render what's left and start batching again
     }
-    
-    // Calculate the half-width and half-height of the rectangle
+
+    // Calculate the half-width and half-height of the quad
     float halfWidth = size.x / 2.0f;
     float halfHeight = size.y / 2.0f;
 
-    // Calculate the positions of the vertices based on the provided position and size (need to follow the order below)
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x - halfWidth, position.y - halfHeight, 0.0f }; // bottom left
+    // Calculate the positions of the four vertices of the quad
+    glm::vec2 bottomLeft = position + glm::vec2(-halfWidth, -halfHeight);
+    glm::vec2 bottomRight = position + glm::vec2(halfWidth, -halfHeight);
+    glm::vec2 topRight = position + glm::vec2(halfWidth, halfHeight);
+    glm::vec2 topLeft = position + glm::vec2(-halfWidth, halfHeight);
+
+    // Set the positions and color of the vertices
+    m_RendererData->QuadVertexBufferCurrent->Position = { bottomLeft.x, bottomLeft.y, 0.0f };
     m_RendererData->QuadVertexBufferCurrent->Color = color;
     m_RendererData->QuadVertexBufferCurrent++;
 
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x + halfWidth, position.y - halfHeight, 0.0f }; // bottom right
+    m_RendererData->QuadVertexBufferCurrent->Position = { bottomRight.x, bottomRight.y, 0.0f };
     m_RendererData->QuadVertexBufferCurrent->Color = color;
     m_RendererData->QuadVertexBufferCurrent++;
 
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x + halfWidth, position.y + halfHeight, 0.0f }; // top right
+    m_RendererData->QuadVertexBufferCurrent->Position = { topRight.x, topRight.y, 0.0f };
     m_RendererData->QuadVertexBufferCurrent->Color = color;
     m_RendererData->QuadVertexBufferCurrent++;
 
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x - halfWidth, position.y + halfHeight, 0.0f }; // top left
+    m_RendererData->QuadVertexBufferCurrent->Position = { topLeft.x, topLeft.y, 0.0f };
     m_RendererData->QuadVertexBufferCurrent->Color = color;
     m_RendererData->QuadVertexBufferCurrent++;
 
+    // Increment the index count
     m_RendererData->QuadIndexCount += 6;
-  }
+}
+
 
   void Renderer2D::DrawTriangle(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color)
   { 

@@ -9,9 +9,19 @@
 #include "core/Core.h"
 #include "InitPhysics.h"
 
+// TODO: Optimise this!
+
 namespace Freeze {
 
     namespace Physics {
+
+        inline float MetersPerPixelFactor = 32.0f;
+
+        inline float PixelToMeter(const float value) { return (value * (1.0f / MetersPerPixelFactor)); }
+        inline b2Vec2 PixelToMeter(const b2Vec2& vector) { return b2Vec2(PixelToMeter(vector.x), PixelToMeter(vector.y)); }
+
+        inline float MeterToPixel(const float value) { return (value * MetersPerPixelFactor); }
+        inline b2Vec2 MeterToPixel(const b2Vec2& vector) { return b2Vec2(MeterToPixel(vector.x), MeterToPixel(vector.y)); }
 
         class PhysicsBody {
         public:
@@ -76,10 +86,11 @@ namespace Freeze {
 
                 b2Vec2 Positions;
                 b2Vec2 Size;
+
+                StaticBodyData* next;
             };
 
-            StaticBodyData* m_StaticBodyData;
-            static std::vector<b2Body*> m_StaticBodies;
+            StaticBodyData* m_Head = nullptr;
         };
 
     }

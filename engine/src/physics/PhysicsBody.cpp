@@ -4,9 +4,6 @@ namespace Freeze {
 
   namespace Physics {
     
-   // Static members initialisation
-   std::vector<b2Body*> StaticBody::m_StaticBodies;
-
     ////////////////////// DYNAMIC BODY ///////////////////////
     DynamicBody::DynamicBody()
       :m_Friction(0.0f), m_Density(0.0f), m_Restitution(0.0f)
@@ -15,43 +12,43 @@ namespace Freeze {
 
     void DynamicBody::CreateBody(const b2Vec2& size, const b2Vec2& position) {
         // Create a new DynamicBodyData instance
-        DynamicBodyData* newBodyData = new DynamicBodyData();
+        DynamicBodyData* dynamicBodyData = new DynamicBodyData();
 
         // Initialize size and position
-        newBodyData->Size = size;
-        newBodyData->Positions = position;
+        dynamicBodyData->Size = size;
+        dynamicBodyData->Positions = position;
 
         // Calculate half body size
         b2Vec2 halfBodySize = b2Vec2(size.x * 0.5f, size.y * 0.5f);
 
         // Configure body definition
-        newBodyData->BodyDef.type = b2_dynamicBody;
-        newBodyData->BodyDef.position = position;
+        dynamicBodyData->BodyDef.type = b2_dynamicBody;
+        dynamicBodyData->BodyDef.position = dynamicBodyData->Positions;
 
         // Create body in physics world
-        newBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&newBodyData->BodyDef);
+        dynamicBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&dynamicBodyData->BodyDef);
 
         // Set shape as a box
-        newBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y);
+        dynamicBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y);
 
         // Configure fixture definition
-        newBodyData->FixtureDef.shape = &newBodyData->Shape;
-        newBodyData->FixtureDef.density = m_Density;
-        newBodyData->FixtureDef.friction = m_Friction;
-        newBodyData->FixtureDef.restitution = m_Restitution;
+        dynamicBodyData->FixtureDef.shape = &dynamicBodyData->Shape;
+        dynamicBodyData->FixtureDef.density = m_Density;
+        dynamicBodyData->FixtureDef.friction = m_Friction;
+        dynamicBodyData->FixtureDef.restitution = m_Restitution;
 
         // Create fixture
-        newBodyData->Body->CreateFixture(&newBodyData->FixtureDef);
+        dynamicBodyData->Body->CreateFixture(&dynamicBodyData->FixtureDef);
 
         // Add new body data to the linked list
         if (!m_Head) {
-            m_Head = newBodyData;
+            m_Head = dynamicBodyData;
         } else {
-            // Find the last node and append newBodyData
+            // Find the last node and append dynamicBodyData
             DynamicBodyData* current = m_Head;
             while (current->next)
                 current = current->next;
-            current->next = newBodyData;
+            current->next = dynamicBodyData;
         }
     }
 
@@ -92,29 +89,46 @@ namespace Freeze {
 
     void StaticBody::CreateBody(const b2Vec2& size, const b2Vec2& positions)
     {
-       m_StaticBodyData = new StaticBodyData();
-       m_StaticBodyData->Size = b2Vec2(size.x, size.y);
-       b2Vec2 halfBodySize = b2Vec2(m_StaticBodyData->Size.x * 0.5f, m_StaticBodyData->Size.y * 0.5f);
-       m_StaticBodyData->Positions = b2Vec2(positions.x, positions.y);
+       StaticBodyData* staticBodyData = new StaticBodyData();
 
-       m_StaticBodyData->BodyDef.type = b2_staticBody;
-       m_StaticBodyData->BodyDef.position = m_StaticBodyData->Positions;
+       staticBodyData->Size = size;
+       staticBodyData->Positions = positions;
+
+       b2Vec2 halfBodySize = b2Vec2(size.x * 0.5f, size.y * 0.5f);
+
+       staticBodyData->BodyDef.type = b2_staticBody;
+       staticBodyData->BodyDef.position = staticBodyData->Positions;
       
-       m_StaticBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&m_StaticBodyData->BodyDef);
-       m_StaticBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y, b2Vec2(0.0f, 0.0f), 0.0f);
+       staticBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&staticBodyData->BodyDef);
+       staticBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y, b2Vec2(0.0f, 0.0f), 0.0f);
 
-       m_StaticBodyData->Body->CreateFixture(&m_StaticBodyData->Shape, 0.0f);
+       staticBodyData->Body->CreateFixture(&staticBodyData->Shape, 0.0f);
 
-       m_StaticBodies.push_back(m_StaticBodyData->Body);
+       // Add new body data to the linked list
+        if (!m_Head) {
+            m_Head = staticBodyData;
+        } else {
+            // Find the last node and append staticBodyData
+            StaticBodyData* current = m_Head;
+            while (current->next)
+                current = current->next;
+            current->next = staticBodyData;
+        }
+
     }
 
     void StaticBody::RenderBody(const glm::vec4& color)
     {
-        for(auto& staticBody : m_StaticBodies)
-        {
-            Renderer2D::DrawQuad({ staticBody->GetPosition().x, staticBody->GetPosition().y }, 
-                                            { m_StaticBodyData->Size.x, m_StaticBodyData->Size.y }, color);
-        } 
+      StaticBodyData* current = m_Head;
+      while (current) {
+          // Access position and size from StaticBodyData and render the body
+          b2Vec2 position = current->Body->GetPosition();
+          b2Vec2 size = current->Size;
+          Renderer2D::DrawQuad({ position.x, position.y }, { size.x, size.y }, color);
+          
+          // Move to the next node in the linked list
+          current = current->next;
+      }
     }
 
     void StaticBody::DeleteBody()
@@ -123,7 +137,12 @@ namespace Freeze {
 
     StaticBody::~StaticBody()
     {
-      delete m_StaticBodyData;
+      StaticBodyData* current = m_Head;
+        while (current) {
+            StaticBodyData* next = current->next;
+            delete current;
+            current = next;
+        }
     }
 
 

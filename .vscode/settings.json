@@ -84,6 +84,9 @@
         "coroutine": "cpp",
         "ranges": "cpp"
     },
-    "cmake.configureOnOpen": true,
+    "cmake.configureOnOpen": false,
     "C_Cpp.errorSquiggles": "enabled",
+    "cmake.automaticReconfigure": false,
+    "cmake.configureOnEdit": false,
+    "cmake.ctest.parallelJobs": 10,
 }
