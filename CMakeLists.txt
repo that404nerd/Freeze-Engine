@@ -55,18 +55,18 @@ include_directories(lib/ImGuiFileDialog)
 add_subdirectory(lib/box2d)
 include_directories(lib/box2d/include)
 
-# Include openal-soft
-find_package(OpenAL REQUIRED)
-include_directories(${OPENAL_INCLUDE_DIRS})
+# Include SoLoud
+add_subdirectory(lib/soloud)
+include_directories(lib/soloud/include)
 
 # Include Engine files
 include_directories(engine/src)
 
 # Create the executable
-add_executable(Sandbox ${SOURCES} ${IMGUI_SOURCES} ${IMGUI_BACKEND_SOURCES})
+add_executable(Sandbox ${SOURCES} ${IMGUI_SOURCES} ${IMGUI_BACKEND_SOURCES} ${SOLOUD_SOURCES})
 
 # Link libraries
-target_link_libraries(Sandbox ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} ${OPENAL_LIBRARY} glfw box2d)
+target_link_libraries(Sandbox ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} glfw box2d soloud)
 
 
 # Set build configurations

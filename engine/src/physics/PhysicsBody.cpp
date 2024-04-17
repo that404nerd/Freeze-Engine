@@ -62,7 +62,7 @@ namespace Freeze {
           // Access position and size from DynamicBodyData and render the body
           b2Vec2 position = current->Body->GetPosition();
           b2Vec2 size = current->Size;
-          Freeze::Renderer2D::DrawQuad({ position.x, position.y }, { size.x, size.y }, color);
+          Renderer2D::DrawQuad({ position.x, position.y }, { size.x, size.y }, color);
           
           // Move to the next node in the linked list
           current = current->next;
@@ -112,7 +112,7 @@ namespace Freeze {
     {
         for(auto& staticBody : m_StaticBodies)
         {
-            Freeze::Renderer2D::DrawQuad({ staticBody->GetPosition().x, staticBody->GetPosition().y }, 
+            Renderer2D::DrawQuad({ staticBody->GetPosition().x, staticBody->GetPosition().y }, 
                                             { m_StaticBodyData->Size.x, m_StaticBodyData->Size.y }, color);
         } 
     }

@@ -15,7 +15,7 @@ namespace Freeze
     namespace Physics {
         namespace PhysicsModule
         {
-            inline b2World* m_PhysicsWorld;
+            inline b2World* m_PhysicsWorld = nullptr;
             inline Box2DDebugRenderer* m_DebugRenderer;
 
             inline void InitPhysicsWorld()
@@ -24,7 +24,11 @@ namespace Freeze
 
                 b2Vec2 gravity(0.0f, -9.8f);
 
-                m_PhysicsWorld = new b2World(gravity);
+                if(m_PhysicsWorld == nullptr)
+                    m_PhysicsWorld = new b2World(gravity);
+                else
+                    FZ_ASSERT("Physics intialised again!");
+
                 m_DebugRenderer = new Box2DDebugRenderer(b2Draw::e_shapeBit);
                 m_PhysicsWorld->SetDebugDraw(m_DebugRenderer);
             }

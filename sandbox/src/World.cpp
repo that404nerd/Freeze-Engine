@@ -7,13 +7,15 @@ World::World()
 
 void World::Init()
 {
+  Freeze::Audio::LoadAudioFile(Freeze::Utils::GetFilePath("sandbox/assets/music/e1m1_doom.wav"));
+
   InitPlatformData();
   m_Player->CreateEntity();
 }
 
 void World::InitPlatformData()
 {
-  m_Platform->CreateBody({ 20.0f, 1.0f }, { 0.0f, 0.0f });
+  m_Platform->CreateBody({ 20.0f, 1.0f }, { 0.0f, -7.0f });
 }
 
 void World::OnImGui()
@@ -23,6 +25,9 @@ void World::OnImGui()
 
   ImGui::Text("Cam X Coordinate: %f", m_Camera->GetPosition().x);
   ImGui::Text("Cam Y Coordinate: %f", m_Camera->GetPosition().y);
+
+  if(ImGui::Button("Play Audio"))
+    Freeze::Audio::PlayAudio();
 }
 
 void World::RenderPlatform()

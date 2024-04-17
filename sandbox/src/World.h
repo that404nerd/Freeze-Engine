@@ -6,11 +6,11 @@
 #include "physics/PhysicsBody.h"
 #include "renderer/Camera.h"
 #include "renderer/Renderer2D.h"
+#include "core/audio/AudioSystem.h"
 
 #include "input/KeyboardInput.h"
 #include "input/MouseInput.h"
 
-#include "core/audio/AudioSystem.h"
 #include "Player.h"
 
 class World {

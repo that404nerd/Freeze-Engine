@@ -1,8 +1,12 @@
 // Dear ImGui: standalone example application for Win32 + OpenGL 3
-// If you are new to Dear ImGui, read documentation from the docs/ folder + read the top of imgui.cpp.
-// Read online: https://github.com/ocornut/imgui/tree/master/docs
 
-// This is provided for completeness, however it is strogly recommended you use OpenGL with SDL or GLFW.
+// Learn about Dear ImGui:
+// - FAQ                  https://dearimgui.com/faq
+// - Getting Started      https://dearimgui.com/getting-started
+// - Documentation        https://dearimgui.com/docs (same as your local docs/ folder).
+// - Introduction, links and more at the top of imgui.cpp
+
+// This is provided for completeness, however it is strongly recommended you use OpenGL with SDL or GLFW.
 
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
@@ -29,50 +33,14 @@ void CleanupDeviceWGL(HWND hWnd, WGL_WindowData* data);
 void ResetDeviceWGL();
 LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
-// Support function for multi-viewports
-// Unlike most other backend combination, we need specific hooks to combine Win32+OpenGL.
-// We could in theory decide to support Win32-specific code in OpenGL backend via e.g. an hypothetical ImGui_ImplOpenGL3_InitForRawWin32().
-static void Hook_Renderer_CreateWindow(ImGuiViewport* viewport)
-{
-    assert(viewport->RendererUserData == NULL);
-
-    WGL_WindowData* data = IM_NEW(WGL_WindowData);
-    CreateDeviceWGL((HWND)viewport->PlatformHandle, data);
-    viewport->RendererUserData = data;
-}
-
-static void Hook_Renderer_DestroyWindow(ImGuiViewport* viewport)
-{
-    if (viewport->RendererUserData != NULL)
-    {
-        WGL_WindowData* data = (WGL_WindowData*)viewport->RendererUserData;
-        CleanupDeviceWGL((HWND)viewport->PlatformHandle, data);
-        IM_DELETE(data);
-        viewport->RendererUserData = NULL;
-    }
-}
-
-static void Hook_Platform_RenderWindow(ImGuiViewport* viewport, void*)
-{
-    // Activate the platform window DC in the OpenGL rendering context
-    if (WGL_WindowData* data = (WGL_WindowData*)viewport->RendererUserData)
-        wglMakeCurrent(data->hDC, g_hRC);
-}
-
-static void Hook_Renderer_SwapBuffers(ImGuiViewport* viewport, void*)
-{
-    if (WGL_WindowData* data = (WGL_WindowData*)viewport->RendererUserData)
-        ::SwapBuffers(data->hDC);
-}
-
 // Main code
 int main(int, char**)
 {
     // Create application window
     //ImGui_ImplWin32_EnableDpiAwareness();
-    WNDCLASSEXW wc = { sizeof(wc), CS_OWNDC, WndProc, 0L, 0L, GetModuleHandle(NULL), NULL, NULL, NULL, NULL, L"ImGui Example", NULL };
+    WNDCLASSEXW wc = { sizeof(wc), CS_OWNDC, WndProc, 0L, 0L, GetModuleHandle(nullptr), nullptr, nullptr, nullptr, nullptr, L"ImGui Example", nullptr };
     ::RegisterClassExW(&wc);
-    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Dear ImGui Win32+OpenGL3 Example", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, NULL, NULL, wc.hInstance, NULL);
+    HWND hwnd = ::CreateWindowW(wc.lpszClassName, L"Dear ImGui Win32+OpenGL3 Example", WS_OVERLAPPEDWINDOW, 100, 100, 1280, 800, nullptr, nullptr, wc.hInstance, nullptr);
 
     // Initialize OpenGL
     if (!CreateDeviceWGL(hwnd, &g_MainWindow))
@@ -94,43 +62,19 @@ int main(int, char**)
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;   // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;    // Enable Gamepad Controls
-    io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;       // Enable Docking
-    io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;     // Enable Multi-Viewport / Platform Windows
 
     // Setup Dear ImGui style
     ImGui::StyleColorsDark();
     //ImGui::StyleColorsClassic();
 
-    // When viewports are enabled we tweak WindowRounding/WindowBg so platform windows can look identical to regular ones.
-    ImGuiStyle& style = ImGui::GetStyle();
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    {
-        style.WindowRounding = 0.0f;
-        style.Colors[ImGuiCol_WindowBg].w = 1.0f;
-    }
-
     // Setup Platform/Renderer backends
     ImGui_ImplWin32_InitForOpenGL(hwnd);
     ImGui_ImplOpenGL3_Init();
 
-    // Win32+GL needs specific hooks for viewport, as there are specific things needed to tie Win32 and GL api.
-    if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-    {
-        ImGuiPlatformIO& platform_io = ImGui::GetPlatformIO();
-        IM_ASSERT(platform_io.Renderer_CreateWindow == NULL);
-        IM_ASSERT(platform_io.Renderer_DestroyWindow == NULL);
-        IM_ASSERT(platform_io.Renderer_SwapBuffers == NULL);
-        IM_ASSERT(platform_io.Platform_RenderWindow == NULL);
-        platform_io.Renderer_CreateWindow = Hook_Renderer_CreateWindow;
-        platform_io.Renderer_DestroyWindow = Hook_Renderer_DestroyWindow;
-        platform_io.Renderer_SwapBuffers = Hook_Renderer_SwapBuffers;
-        platform_io.Platform_RenderWindow = Hook_Platform_RenderWindow;
-    }
-
     // Load Fonts
     // - If no fonts are loaded, dear imgui will use the default font. You can also load multiple fonts and use ImGui::PushFont()/PopFont() to select them.
     // - AddFontFromFileTTF() will return the ImFont* so you can store it if you need to select the font among multiple.
-    // - If the file cannot be loaded, the function will return NULL. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
+    // - If the file cannot be loaded, the function will return a nullptr. Please handle those errors in your application (e.g. use an assertion, or display an error and quit).
     // - The fonts will be rasterized at a given size (w/ oversampling) and stored into a texture when calling ImFontAtlas::Build()/GetTexDataAsXXXX(), which ImGui_ImplXXXX_NewFrame below will call.
     // - Use '#define IMGUI_ENABLE_FREETYPE' in your imconfig file to use Freetype for higher quality font rendering.
     // - Read 'docs/FONTS.md' for more instructions and details.
@@ -140,8 +84,8 @@ int main(int, char**)
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/DroidSans.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Roboto-Medium.ttf", 16.0f);
     //io.Fonts->AddFontFromFileTTF("../../misc/fonts/Cousine-Regular.ttf", 15.0f);
-    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, NULL, io.Fonts->GetGlyphRangesJapanese());
-    //IM_ASSERT(font != NULL);
+    //ImFont* font = io.Fonts->AddFontFromFileTTF("c:\\Windows\\Fonts\\ArialUni.ttf", 18.0f, nullptr, io.Fonts->GetGlyphRangesJapanese());
+    //IM_ASSERT(font != nullptr);
 
     // Our state
     bool show_demo_window = true;
@@ -155,7 +99,7 @@ int main(int, char**)
         // Poll and handle messages (inputs, window resize, etc.)
         // See the WndProc() function below for our to dispatch events to the Win32 backend.
         MSG msg;
-        while (::PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+        while (::PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
         {
             ::TranslateMessage(&msg);
             ::DispatchMessage(&msg);
@@ -214,16 +158,6 @@ int main(int, char**)
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
-        // Update and Render additional Platform Windows
-        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable)
-        {
-            ImGui::UpdatePlatformWindows();
-            ImGui::RenderPlatformWindowsDefault();
-
-            // Restore the OpenGL rendering context to the main window DC, since platform windows might have changed it.
-            wglMakeCurrent(g_MainWindow.hDC, g_hRC);
-        }
-
         // Present
         ::SwapBuffers(g_MainWindow.hDC);
     }
@@ -266,7 +200,7 @@ bool CreateDeviceWGL(HWND hWnd, WGL_WindowData* data)
 
 void CleanupDeviceWGL(HWND hWnd, WGL_WindowData* data)
 {
-    wglMakeCurrent(NULL, NULL);
+    wglMakeCurrent(nullptr, nullptr);
     ::ReleaseDC(hWnd, data->hDC);
 }
 

@@ -23,7 +23,7 @@ void Player::CreateEntity() {
             // Set properties and create body for m_PhysicsEntity1
             m_PhysicsEntity1->SetFriction(0.3f);
             m_PhysicsEntity1->SetDensity(0.3f); // You might want to set restitution here too if needed
-            m_PhysicsEntity1->SetRestitution(0.8f);
+            m_PhysicsEntity1->SetRestitution(0.5f);
             m_PhysicsEntity1->CreateBody({ 1.0f, 1.0f }, { x, y });
 
             x += 2.0f;

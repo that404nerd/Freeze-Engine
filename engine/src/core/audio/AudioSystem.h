@@ -1,36 +1,40 @@
 #pragma once
 
-#include <AL/al.h>
-#include <AL/alc.h>
-
 #include "core/Core.h"
 
-// This is a temporary example that can be referenced later on for abstracting the API
+#include "soloud.h"
+#include "soloud_wav.h"
 
 namespace Freeze 
 {
-  static ALCdevice* audioDevice = alcOpenDevice(nullptr); // Use the default device
 
-  static void InitAudio()
-  {
-    if(!audioDevice)
+  namespace Audio {
+
+    inline SoLoud::Soloud g_AudioEngine;
+    inline SoLoud::Wav g_AudioWAV;
+  
+    inline void InitAudioSystem()
     {
-      FZ_ERROR("Audio device failed to open: {}", alGetError());
-    }
-  }
-
-  static void DestroyAudio()
-  {
-    // Create an audio context
-    ALCcontext* context = alcCreateContext(audioDevice, nullptr);
-
-    ALenum error = alGetError();
-    if(error != AL_NO_ERROR)
-    {
-      FZ_ERROR("Failed to create context: {}", alGetError());
+      g_AudioEngine.init();
     }
 
-    alcMakeContextCurrent(context);
-  }
+
+    inline void LoadAudioFile(const std::string& filePath)
+    {
+      g_AudioWAV.load(filePath.c_str());
+    }
+
+    inline void PlayAudio()
+    {
+      
+        g_AudioEngine.play(g_AudioWAV);
+    }
+
+    inline void DestroyAudioSystem()
+    {
+     
+    }
+
+  };
 
 }

@@ -5,14 +5,17 @@ namespace Freeze
 
   void Application::OnInit(uint32_t width, uint32_t height, const std::string &title)
   {
-    m_Window = std::make_unique<Freeze::Window>();
+    m_Window = std::make_unique<Window>();
     m_Window->CreateWindow(width, height, title);
     m_Window->CreateWindowContext();
 
     InitGLEW();
+
     SetEngineViewport();
+
     EnableOpenGLDebug();
     Renderer2D::InitRenderer();
+    Audio::InitAudioSystem();
 
     m_ImGuiContext->CreateImGuiContext(m_Window->GetWindowInstance());
 
@@ -32,8 +35,8 @@ namespace Freeze
       float deltaTime = currentFrame - lastFrame;
       lastFrame = currentFrame;
 
-      m_Sandbox->OnEvent( deltaTime);
-
+      m_Sandbox->OnEvent(deltaTime);
+  
       RenderCommands::SetRenderColor(glm::vec4(0.161, 0.161, 0.133, 1.0f));
       RenderCommands::RenderClear();
 
@@ -41,11 +44,9 @@ namespace Freeze
 
       // ALWAYS UPDATE IMGUI BEFORE DOING SANDBOX STUFF!!!
       m_ImGuiContext->UpdateImGui();
-
       m_Sandbox->OnImGui();
 
       Physics::PhysicsModule::UpdatePhysicsWorld(deltaTime);
-
       m_Sandbox->OnUpdate(deltaTime);
 
       Renderer2D::Flush();
@@ -56,15 +57,13 @@ namespace Freeze
       // Then swap the buffers and check for events
       glfwSwapBuffers(m_Window->GetWindowInstance());
       glfwPollEvents();
-
     }
   }
 
   void Application::SetEngineViewport()
   {
     glViewport(0, 0, m_Window->GetWindowWidth(), m_Window->GetWindowHeight());
-    glfwSetFramebufferSizeCallback(m_Window->GetWindowInstance(),
-                                   framebuffer_size_callback);
+    glfwSetFramebufferSizeCallback(m_Window->GetWindowInstance(), framebuffer_size_callback);
   }
 
   bool Application::InitGLEW()
@@ -73,6 +72,7 @@ namespace Freeze
     {
       FZ_ERROR("GLEW failed to initialise");
       FZ_EXIT();
+      return false;
     }
 
     return true;
@@ -80,13 +80,13 @@ namespace Freeze
 
   Application::~Application()
   {
+    Audio::DestroyAudioSystem();
     Renderer2D::ShutdownRenderer();
     Physics::PhysicsModule::DestroyPhysicsWorld();
   }
 
   // Callback functions
-  inline void framebuffer_size_callback(GLFWwindow *window, int width,
-                                        int height)
+  inline void framebuffer_size_callback(GLFWwindow *window, int width, int height)
   {
     glViewport(0, 0, width, height);
   }

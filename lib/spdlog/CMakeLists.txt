@@ -1,6 +1,6 @@
 # Copyright(c) 2019 spdlog authors Distributed under the MIT License (http://opensource.org/licenses/MIT)
 
-cmake_minimum_required(VERSION 3.11)
+cmake_minimum_required(VERSION 3.10...3.21)
 
 # ---------------------------------------------------------------------------------------
 # Start spdlog project
@@ -40,7 +40,7 @@ endif()
 
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-if(CMAKE_SYSTEM_NAME MATCHES "CYGWIN" OR CMAKE_SYSTEM_NAME MATCHES "MSYS")
+if(CMAKE_SYSTEM_NAME MATCHES "CYGWIN" OR CMAKE_SYSTEM_NAME MATCHES "MSYS" OR CMAKE_SYSTEM_NAME MATCHES "MINGW")
     set(CMAKE_CXX_EXTENSIONS ON)
 endif()
 
@@ -265,7 +265,7 @@ if(SPDLOG_NO_EXCEPTIONS)
     if(NOT MSVC)
         target_compile_options(spdlog PRIVATE -fno-exceptions)
     else()
-        target_compile_options(spdlog PRIVATE /EHsc)
+        target_compile_options(spdlog PRIVATE /EHs-c-)
     endif()
 endif()
 # ---------------------------------------------------------------------------------------
@@ -342,7 +342,8 @@ if(SPDLOG_INSTALL)
     # ---------------------------------------------------------------------------------------
     # Install CMake config files
     # ---------------------------------------------------------------------------------------
-    export(TARGETS spdlog spdlog_header_only NAMESPACE spdlog:: FILE "${CMAKE_CURRENT_BINARY_DIR}/${config_targets_file}")
+    export(TARGETS spdlog spdlog_header_only NAMESPACE spdlog::
+           FILE "${CMAKE_CURRENT_BINARY_DIR}/${config_targets_file}")
     install(EXPORT spdlog DESTINATION ${export_dest_dir} NAMESPACE spdlog:: FILE ${config_targets_file})
 
     include(CMakePackageConfigHelpers)

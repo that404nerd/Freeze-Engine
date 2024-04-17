@@ -35,13 +35,13 @@ namespace Freeze {
     static const int MaxTriangleVertices = MaxTriangles * 3;
     static const int MaxTriangleIndices = MaxQuads * 3; // Each quad has 3 indices
 
-    std::shared_ptr<Freeze::VertexBuffer> QuadVertexBuffer = std::make_shared<VertexBuffer>();
-    std::shared_ptr<Freeze::VertexArray> QuadVertexArray = std::make_shared<VertexArray>();
-    std::shared_ptr<Freeze::Shader> QuadShader = std::make_shared<Shader>();
+    std::shared_ptr<VertexBuffer> QuadVertexBuffer = std::make_shared<VertexBuffer>();
+    std::shared_ptr<VertexArray> QuadVertexArray = std::make_shared<VertexArray>();
+    std::shared_ptr<Shader> QuadShader = std::make_shared<Shader>();
 
-    std::shared_ptr<Freeze::VertexBuffer> TriangleVertexBuffer = std::make_shared<VertexBuffer>();
-    std::shared_ptr<Freeze::VertexArray> TriangleVertexArray = std::make_shared<VertexArray>();
-    std::shared_ptr<Freeze::Shader> TriangleShader = std::make_shared<Shader>();
+    std::shared_ptr<VertexBuffer> TriangleVertexBuffer = std::make_shared<VertexBuffer>();
+    std::shared_ptr<VertexArray> TriangleVertexArray = std::make_shared<VertexArray>();
+    std::shared_ptr<Shader> TriangleShader = std::make_shared<Shader>();
 
     uint32_t QuadIndexCount = 0;
     QuadVertex* QuadVertexBufferStart = nullptr; // Stores the base address of the vertex (Starting address)
@@ -106,8 +106,8 @@ namespace Freeze {
       delete[] quadIndices;
 
       // Load the default shaders
-      m_RendererData->QuadShader->LoadShadersFromFiles(Freeze::Utils::GetFilePath("engine/assets/shaders/Quad.vert"),
-                                                       Freeze::Utils::GetFilePath("engine/assets/shaders/Quad.frag"));
+      m_RendererData->QuadShader->LoadShadersFromFiles(Utils::GetFilePath("engine/assets/shaders/Quad.vert"),
+                                                       Utils::GetFilePath("engine/assets/shaders/Quad.frag"));
 
       /////////////////////// Triangle Rendering ///////////////////////////
       m_RendererData->TriangleVertexArray->AddVertexArray();
@@ -149,8 +149,8 @@ namespace Freeze {
       delete[] triangleIndices;
 
       // Load the default shaders
-      m_RendererData->TriangleShader->LoadShadersFromFiles(Freeze::Utils::GetFilePath("engine/assets/shaders/Triangle.vert"),
-                                                       Freeze::Utils::GetFilePath("engine/assets/shaders/Triangle.frag"));
+      m_RendererData->TriangleShader->LoadShadersFromFiles(Utils::GetFilePath("engine/assets/shaders/Triangle.vert"),
+                                                       Utils::GetFilePath("engine/assets/shaders/Triangle.frag"));
   }
 
   void Renderer2D::StartBatch()

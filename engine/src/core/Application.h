@@ -6,6 +6,7 @@
 #include "../../../sandbox/src/Sandbox.h"
 #include "renderer/Renderer2D.h"
 #include "physics/InitPhysics.h"
+#include "audio/AudioSystem.h"
 #include "imgui/ImGuiContext.h"
 
 #include "Core.h"
