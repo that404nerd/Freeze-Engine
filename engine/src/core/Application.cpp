@@ -1,5 +1,7 @@
 #include "Application.h"
 
+// TODO: Create a macro that will take any function in the parameter
+
 namespace Freeze
 {
 
@@ -8,10 +10,9 @@ namespace Freeze
     m_Window = std::make_unique<Window>();
     m_Window->CreateWindow(width, height, title);
     m_Window->CreateWindowContext();
+    m_Window->SetEventCallbackFunction(Application::OnEvent);
 
     InitGLEW();
-
-    SetEngineViewport();
 
     EnableOpenGLDebug();
     Renderer2D::InitRenderer();
@@ -25,18 +26,36 @@ namespace Freeze
     m_Sandbox->OnInit();
   }
 
+  void Application::OnEvent(Event& e)
+  {
+    EventDispatcher dispatcher(e);
+
+    auto OnResizeHandler = [](WindowResizeEvent& event) {
+      OnResize(event);
+      return true;
+    };
+
+    auto OnCloseHandler = [](WindowCloseEvent& event) {
+      Window::DestroyWindow();
+      return true;
+    };
+
+    // Dispatch the event using the lambda
+    dispatcher.Dispatch<WindowResizeEvent>(OnResizeHandler);
+    dispatcher.Dispatch<WindowCloseEvent>(OnCloseHandler);
+  }
+
   void Application::Run()
   {
     float lastFrame = 0.0f;
 
-    while (!glfwWindowShouldClose(m_Window->GetWindowInstance()))
+    while (!m_Window->IsWindowClosed())
     {
+
       float currentFrame = glfwGetTime();
       float deltaTime = currentFrame - lastFrame;
       lastFrame = currentFrame;
 
-      m_Sandbox->OnEvent(deltaTime);
-  
       RenderCommands::SetRenderColor(glm::vec4(0.161, 0.161, 0.133, 1.0f));
       RenderCommands::RenderClear();
 
@@ -49,21 +68,22 @@ namespace Freeze
       Physics::PhysicsModule::UpdatePhysicsWorld(deltaTime);
       m_Sandbox->OnUpdate(deltaTime);
 
+
       Renderer2D::Flush();
 
       // Render ImGui Stuff
       m_ImGuiContext->RenderImGui();
 
-      // Then swap the buffers and check for events
-      glfwSwapBuffers(m_Window->GetWindowInstance());
       glfwPollEvents();
+      glfwSwapBuffers(m_Window->GetWindowInstance());
     }
   }
 
-  void Application::SetEngineViewport()
+  void Application::OnResize(WindowResizeEvent& event)
   {
-    glViewport(0, 0, m_Window->GetWindowWidth(), m_Window->GetWindowHeight());
-    glfwSetFramebufferSizeCallback(m_Window->GetWindowInstance(), framebuffer_size_callback);
+    event = WindowResizeEvent(Window::GetWindowWidth(), Window::GetWindowHeight()); 
+    glViewport(0, 0, event.GetWidth(), event.GetHeight());
+    FZ_INFO("Window is resizing: {}, {}", event.GetWidth(), event.GetHeight());
   }
 
   bool Application::InitGLEW()
@@ -85,10 +105,5 @@ namespace Freeze
     Physics::PhysicsModule::DestroyPhysicsWorld();
   }
 
-  // Callback functions
-  inline void framebuffer_size_callback(GLFWwindow *window, int width, int height)
-  {
-    glViewport(0, 0, width, height);
-  }
 
 };

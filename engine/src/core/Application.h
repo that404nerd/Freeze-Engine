@@ -6,7 +6,7 @@
 #include "../../../sandbox/src/Sandbox.h"
 #include "renderer/Renderer2D.h"
 #include "physics/InitPhysics.h"
-#include "audio/AudioSystem.h"
+#include "AudioSystem.h"
 #include "imgui/ImGuiContext.h"
 
 #include "Core.h"
@@ -16,25 +16,23 @@
 namespace Freeze
 {
     // Callback functions
-    inline void framebuffer_size_callback(GLFWwindow* window, int width, int height);
-    inline void process_input(GLFWwindow* window);
-
     class Application
     {
     public:
         void OnInit(uint32_t width, uint32_t height, const std::string& title);
-        void OnEvent();
+        static void OnEvent(Event& e);
         void Run();
 
-        void SetEngineViewport();
+        static void OnResize(WindowResizeEvent& event);
 
         virtual ~Application();
 
     private:
         bool InitGLEW();
 
+        static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     private:
-        std::shared_ptr<Sandbox> m_Sandbox;
+        inline static std::shared_ptr<Sandbox> m_Sandbox;
         std::shared_ptr<Window> m_Window;
         std::shared_ptr<Renderer2D> m_Renderer2D;
         std::shared_ptr<ImGuiContext> m_ImGuiContext;

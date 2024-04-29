@@ -6,7 +6,7 @@ namespace Freeze {
     
     ////////////////////// DYNAMIC BODY ///////////////////////
     DynamicBody::DynamicBody()
-      :m_Friction(0.0f), m_Density(0.0f), m_Restitution(0.0f)
+      : m_Friction(0.0f), m_Density(0.0f), m_Restitution(0.0f)
     {
     }
 
@@ -40,48 +40,30 @@ namespace Freeze {
         // Create fixture
         dynamicBodyData->Body->CreateFixture(&dynamicBodyData->FixtureDef);
 
-        // Add new body data to the linked list
-        if (!m_Head) {
-            m_Head = dynamicBodyData;
-        } else {
-            // Find the last node and append dynamicBodyData
-            DynamicBodyData* current = m_Head;
-            while (current->next)
-                current = current->next;
-            current->next = dynamicBodyData;
-        }
+        m_Current = dynamicBodyData;
+        m_BodyData.push_back(dynamicBodyData);
     }
 
-
     void DynamicBody::RenderBody(const glm::vec4& color) {
-      DynamicBodyData* current = m_Head;
-      while (current) {
-          // Access position and size from DynamicBodyData and render the body
-          b2Vec2 position = current->Body->GetPosition();
-          b2Vec2 size = current->Size;
-          Renderer2D::DrawQuad({ position.x, position.y }, { size.x, size.y }, color);
-          
-          // Move to the next node in the linked list
-          current = current->next;
+      for(auto& body : m_BodyData)
+      {
+        b2Vec2 position = body->Body->GetPosition();
+        b2Vec2 size = body->Size;
+
+        body->RendShape->DrawQuad({ position.x, position.y }, { size.x, size.y }, color);
       }
     }
 
-    void DynamicBody::DeleteBody()
+    DynamicBody::DynamicBodyData* DynamicBody::GetBodyData()
     {
-      
+      return m_Current;
     }
 
     DynamicBody::~DynamicBody()
     {
-      DynamicBodyData* current = m_Head;
-        while (current) {
-            DynamicBodyData* next = current->next;
-            delete current;
-            current = next;
-        }
+      m_BodyData.clear();
     }
     
-
     /////////////////////// STATIC BODY ////////////////////
     StaticBody::StaticBody()
     {
@@ -89,60 +71,38 @@ namespace Freeze {
 
     void StaticBody::CreateBody(const b2Vec2& size, const b2Vec2& positions)
     {
-       StaticBodyData* staticBodyData = new StaticBodyData();
+      StaticBodyData* staticBodyData = new StaticBodyData();
 
-       staticBodyData->Size = size;
-       staticBodyData->Positions = positions;
+      staticBodyData->Size = size;
+      staticBodyData->Positions = positions;
 
-       b2Vec2 halfBodySize = b2Vec2(size.x * 0.5f, size.y * 0.5f);
+      b2Vec2 halfBodySize = b2Vec2(size.x * 0.5f, size.y * 0.5f);
 
-       staticBodyData->BodyDef.type = b2_staticBody;
-       staticBodyData->BodyDef.position = staticBodyData->Positions;
+      staticBodyData->BodyDef.type = b2_staticBody;
+      staticBodyData->BodyDef.position = staticBodyData->Positions;
       
-       staticBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&staticBodyData->BodyDef);
-       staticBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y, b2Vec2(0.0f, 0.0f), 0.0f);
+      staticBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&staticBodyData->BodyDef);
+      staticBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y, b2Vec2(0.0f, 0.0f), 0.0f);
 
-       staticBodyData->Body->CreateFixture(&staticBodyData->Shape, 0.0f);
+      staticBodyData->Body->CreateFixture(&staticBodyData->Shape, 0.0f);
 
-       // Add new body data to the linked list
-        if (!m_Head) {
-            m_Head = staticBodyData;
-        } else {
-            // Find the last node and append staticBodyData
-            StaticBodyData* current = m_Head;
-            while (current->next)
-                current = current->next;
-            current->next = staticBodyData;
-        }
-
+      m_BodyData.push_back(staticBodyData); 
     }
 
     void StaticBody::RenderBody(const glm::vec4& color)
     {
-      StaticBodyData* current = m_Head;
-      while (current) {
-          // Access position and size from StaticBodyData and render the body
-          b2Vec2 position = current->Body->GetPosition();
-          b2Vec2 size = current->Size;
-          Renderer2D::DrawQuad({ position.x, position.y }, { size.x, size.y }, color);
-          
-          // Move to the next node in the linked list
-          current = current->next;
-      }
-    }
+      for(auto& body : m_BodyData)
+      {
+        b2Vec2 position = body->Body->GetPosition();
+        b2Vec2 size = body->Size;
 
-    void StaticBody::DeleteBody()
-    {
+        body->RendShape->DrawQuad({ position.x, position.y }, { size.x, size.y }, color);
+      }
     }
 
     StaticBody::~StaticBody()
     {
-      StaticBodyData* current = m_Head;
-        while (current) {
-            StaticBodyData* next = current->next;
-            delete current;
-            current = next;
-        }
+      m_BodyData.clear();
     }
 
 

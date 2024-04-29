@@ -7,6 +7,9 @@
 #include <memory>
 
 #include "core/Core.h"
+#include "event/Event.h"
+#include "event/KeyEvent.h"
+#include "event/MouseEvent.h"
 
 #include "Entity.h"
 #include "renderer/Renderer2D.h"
@@ -21,12 +24,14 @@ public:
 
     void OnImGui();
 
-    void MovePlayer(float dt);
+    void MovePlayer();
 
     ~Player();
 private:
     std::shared_ptr<Freeze::Physics::DynamicBody> m_PhysicsEntity = std::make_shared<Freeze::Physics::DynamicBody>(); // dynamic
     std::shared_ptr<Freeze::Physics::DynamicBody> m_PhysicsEntity1 = std::make_shared<Freeze::Physics::DynamicBody>(); // dynamic
+
+    Freeze::ShapeRenderer* m_Shape = new Freeze::ShapeRenderer();
 
     glm::mat4 m_PlayerMove = glm::mat4(1.0f); 
     glm::vec4 m_ColorChoose = { 0.3f, 0.6f, 0.4f, 0.2f };

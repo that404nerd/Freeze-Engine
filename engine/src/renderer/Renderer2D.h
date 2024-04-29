@@ -30,14 +30,17 @@ namespace Freeze {
 
     static void InitRenderer();
 
-    // Quad
-    static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
-
-    // Triangle
-    static void DrawTriangle(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
-
     static void ShutdownRenderer();
     ~Renderer2D() {};
+  };
+
+  class ShapeRenderer : public Renderer2D {
+  public:
+    // Quad
+    void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
+
+    // Triangle
+    void DrawTriangle(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
   };
 
 };

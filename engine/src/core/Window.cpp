@@ -5,6 +5,7 @@ namespace Freeze
     GLFWwindow *Window::m_Window;
     uint32_t Window::m_Width;
     uint32_t Window::m_Height;
+    bool Window::m_IsWindowClosed = false;
 
     Window::Window()
     {
@@ -19,6 +20,7 @@ namespace Freeze
 
         m_Width = width;
         m_Height = height;
+        m_IsWindowClosed = false;
 
         if (m_Window == nullptr)
         {
@@ -26,6 +28,33 @@ namespace Freeze
             FZ_EXIT();
             return false;
         }
+
+        glfwSetWindowUserPointer(m_Window, &m_WindowData);
+
+        glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
+		{
+            WindowDataFn* data = static_cast<WindowDataFn*>(glfwGetWindowUserPointer(window));
+			m_Width = width;
+			m_Height = height;
+
+			if (data && data->callbackFn) {
+                WindowResizeEvent event(m_Width, m_Height);
+                data->callbackFn(event);
+            }
+		});
+
+        glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
+        {
+            WindowDataFn* data = static_cast<WindowDataFn*>(glfwGetWindowUserPointer(window));
+
+            m_IsWindowClosed = true;
+
+            if(data && data->callbackFn)
+            {
+                WindowCloseEvent event;
+                data->callbackFn(event);
+            }
+        });
 
         return true;
     }
@@ -35,8 +64,9 @@ namespace Freeze
         glfwMakeContextCurrent(m_Window);
     }
 
-    Window::~Window()
+    void Window::DestroyWindow()
     {
+        glfwDestroyWindow(m_Window);
         glfwTerminate();
     }
 };

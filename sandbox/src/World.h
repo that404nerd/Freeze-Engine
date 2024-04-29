@@ -6,20 +6,32 @@
 #include "physics/PhysicsBody.h"
 #include "renderer/Camera.h"
 #include "renderer/Renderer2D.h"
-#include "core/audio/AudioSystem.h"
+#include "core/AudioSystem.h"
 
-#include "input/KeyboardInput.h"
-#include "input/MouseInput.h"
+#include "event/Event.h"
+#include "event/KeyboardInput.h"
+#include "event/MouseInput.h"
+#include "event/KeyEvent.h"
 
 #include "Player.h"
 
+    #define HZ_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 class World {
+
 public:
     World();
 
     void Init();
     void InitPlatformData();
     void RenderPlatform();
+
+    bool OnPress(const Freeze::KeyPressEvent& event)
+    {
+        FZ_INFO("SHIT IS WORKING");
+        return true;
+    }
+
+    static void OnEvent(Freeze::Event& e);
 
     void OnImGui();
 

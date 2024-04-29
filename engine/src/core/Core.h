@@ -4,8 +4,6 @@
 
 #include <string>
 
-#include <box2d/b2_math.h>
-
 #include "root_dir.h"
 
 #ifdef RELEASE

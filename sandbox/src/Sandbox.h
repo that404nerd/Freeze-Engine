@@ -18,7 +18,7 @@ public:
 
     void OnInit();
     void OnImGui();
-    void OnEvent(float dt);
+    void OnEvent(Freeze::Event& event);
     void OnUpdate(float dt);
 
     ~Sandbox();

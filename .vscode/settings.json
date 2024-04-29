@@ -1,4 +1,7 @@
 {
+    "workbench.colorTheme": "Gruvbox Dark (Hard)",
+    "editor.fontSize": 16,
+    "editor.fontWeight": "1",
     "C_Cpp.default.compilerPath": "/usr/bin/g++",
     "files.associations": {
         "limits": "cpp",
@@ -82,7 +85,8 @@
         "hash_map": "cpp",
         "hash_set": "cpp",
         "coroutine": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "cfenv": "cpp"
     },
     "cmake.configureOnOpen": false,
     "C_Cpp.errorSquiggles": "enabled",

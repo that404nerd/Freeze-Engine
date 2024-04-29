@@ -8,9 +8,10 @@ void Sandbox::OnInit()
     m_World->Init();
 }
 
-void Sandbox::OnEvent(float dt)
+void Sandbox::OnEvent(Freeze::Event& event)
 {
-    m_World->GetPlayerInstance()->MovePlayer(dt);    
+    m_World->OnEvent(event);
+    m_World->GetPlayerInstance()->MovePlayer();    
 }
 
 void Sandbox::OnImGui()
