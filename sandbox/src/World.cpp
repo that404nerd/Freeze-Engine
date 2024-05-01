@@ -15,7 +15,7 @@ void World::Init()
 
 void World::OnEvent(Freeze::Event& e)
 {
-
+  
 }
 
 void World::InitPlatformData()
@@ -32,7 +32,10 @@ void World::OnImGui()
   ImGui::Text("Camera Y Coordinate: %f", m_Camera->GetPosition().y);
 
   if(ImGui::Button("Play Audio"))
+  {
+    FZ_INFO(Freeze::Audio::IsPlaying());
     Freeze::Audio::PlayAudio();
+  }
   if(ImGui::Button("Pause Audio"))
     Freeze::Audio::PauseAudio();
 }

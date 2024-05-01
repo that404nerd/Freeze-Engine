@@ -14,7 +14,7 @@ namespace Freeze
     inline SoLoud::Wav g_AudioWAV;
 
     inline SoLoud::handle g_Handle;
-    inline bool g_IsPlaying = false;
+    inline bool g_IsPlaying;
   
     inline void InitAudioSystem()
     {
@@ -23,30 +23,33 @@ namespace Freeze
       FZ_INFO("Audio Initialised");
     }
 
+    inline void SetPlayingStatus(bool status) { g_IsPlaying = status; }
+    inline bool IsPlaying() { return g_IsPlaying; }
 
     inline void LoadAudioFile(const std::string& filePath)
     {
       g_AudioWAV.load(filePath.c_str());
+      SetPlayingStatus(true);
     }
 
-    inline bool PlayAudio()
+    inline void PlayAudio()
     {
-      if(g_AudioEngine)
+      if(g_IsPlaying)
       {
-        g_IsPlaying = true;
         g_Handle = g_AudioEngine->play(g_AudioWAV);
-        
-        return g_IsPlaying;
+        SetPlayingStatus(false);
+      } 
+      else {
+        return;
       }
-
-      return !g_IsPlaying;
-      
     }
 
     inline void PauseAudio()
     {
-      if(g_IsPlaying == true)
+      if(!g_IsPlaying) {
         g_AudioEngine->setPause(g_Handle, true);
+        SetPlayingStatus(true);
+      }
       else
         return;
     }
