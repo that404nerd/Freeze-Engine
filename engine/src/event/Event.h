@@ -37,6 +37,7 @@ namespace Freeze {
         }
     }
 
+
     // All the events such as WindowEvent, KeyboardEvent, MouseEvent will be derived from Event class
     class Event {
     public:
@@ -58,7 +59,7 @@ namespace Freeze {
             if(m_Event.GetEventType() == T::GetStaticEventType()) // Check if the event type is same
             {
                 // Set m_Handled based on the return type of the eventFn function
-                m_Event.m_Handled |= func(static_cast<T&>(m_Event)); // Convert the m_Event to whatever template type that is passwd
+                m_Event.m_Handled |= func(static_cast<T&>(m_Event)); // Convert the m_Event to whatever template type that is passed
                 return true;
             }
 

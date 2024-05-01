@@ -1,7 +1,5 @@
 #include "Application.h"
 
-// TODO: Create a macro that will take any function in the parameter
-
 namespace Freeze
 {
 
@@ -30,7 +28,7 @@ namespace Freeze
   {
     EventDispatcher dispatcher(e);
 
-    auto OnResizeHandler = [](WindowResizeEvent& event) {
+   auto OnResizeHandler = [](WindowResizeEvent& event) {
       OnResize(event);
       return true;
     };
@@ -40,9 +38,15 @@ namespace Freeze
       return true;
     };
 
+    auto OnKeyPressHandler = [](KeyPressEvent& event) {
+      OnPress(event);
+      return true;
+    };
+
     // Dispatch the event using the lambda
     dispatcher.Dispatch<WindowResizeEvent>(OnResizeHandler);
     dispatcher.Dispatch<WindowCloseEvent>(OnCloseHandler);
+    dispatcher.Dispatch<KeyPressEvent>(OnKeyPressHandler);
   }
 
   void Application::Run()
@@ -51,7 +55,6 @@ namespace Freeze
 
     while (!m_Window->IsWindowClosed())
     {
-
       float currentFrame = glfwGetTime();
       float deltaTime = currentFrame - lastFrame;
       lastFrame = currentFrame;

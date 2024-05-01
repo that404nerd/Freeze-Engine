@@ -15,20 +15,7 @@ void World::Init()
 
 void World::OnEvent(Freeze::Event& e)
 {
-  // Freeze::EventDispatcher dispatcher(e);
-  // dispatcher.Dispatch<Freeze::KeyPressEvent>(HZ_BIND_EVENT_FN(OnPress));
 
-  Freeze::EventDispatcher dispatcher(e);
-
-  // Print event type for debugging
-  FZ_INFO("Event type: {}", e.GetEventType());
-
-  // Check if the event type is KeyPressEvent before dispatching
-  if (e.GetEventType() == Freeze::ToString(Freeze::EventTypes::KeyPressEvent)) {
-    FZ_INFO("SHIT IS WORKING");
-  } else {
-      // Handle other event types if needed
-  }
 }
 
 void World::InitPlatformData()

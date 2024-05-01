@@ -5,7 +5,7 @@
 	path = lib/spdlog
 	url = https://github.com/gabime/spdlog.git
 [submodule "lib/stb_image"]
-	path = lib/stb_image
+	path = lib/stb
 	url = https://github.com/nothings/stb.git
 [submodule "lib/glm"]
 	path = lib/glm
@@ -19,6 +19,3 @@
 [submodule "lib/soloud"]
 	path = lib/soloud
 	url = https://github.com/systemcoding/soloud
-[submodule "lib/freetype-gl"]
-	path = lib/freetype-gl
-	url = https://github.com/rougier/freetype-gl

@@ -29,10 +29,18 @@ namespace Freeze
       g_AudioWAV.load(filePath.c_str());
     }
 
-    inline void PlayAudio()
+    inline bool PlayAudio()
     {
-      g_IsPlaying = true;
-      g_Handle = g_AudioEngine->play(g_AudioWAV);
+      if(g_AudioEngine)
+      {
+        g_IsPlaying = true;
+        g_Handle = g_AudioEngine->play(g_AudioWAV);
+        
+        return g_IsPlaying;
+      }
+
+      return !g_IsPlaying;
+      
     }
 
     inline void PauseAudio()
