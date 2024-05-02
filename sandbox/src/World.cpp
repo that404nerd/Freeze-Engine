@@ -11,6 +11,7 @@ void World::Init()
 
   InitPlatformData();
   m_Player->CreateEntity();
+  m_Enemy->CreateEntity();
 }
 
 void World::OnEvent(Freeze::Event& e)
@@ -64,6 +65,7 @@ void World::Update(float deltaTime)
   }
 
   m_Player->RenderEntity();
+  m_Enemy->RenderEntity();
 }
 
 World::~World() {}

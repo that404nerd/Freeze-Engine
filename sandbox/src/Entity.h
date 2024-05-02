@@ -15,10 +15,7 @@ public:
     virtual void CreateEntity() = 0;
     virtual void RenderEntity() = 0;
 
-    virtual ~Entity()
-    {
-
-    }
+    virtual ~Entity() = default;
 private:
     const std::string m_EntityID;
 };

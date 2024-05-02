@@ -14,40 +14,33 @@
 #include "event/KeyEvent.h"
 
 #include "Player.h"
+#include "Enemy.h"
 
-    #define HZ_BIND_EVENT_FN(fn) [this](auto&&... args) -> decltype(auto) { return this->fn(std::forward<decltype(args)>(args)...); }
 class World {
 
 public:
-    World();
+  World();
 
-    void Init();
-    void InitPlatformData();
-    void RenderPlatform();
+  void Init();
+  void InitPlatformData();
+  void RenderPlatform();
 
-    bool OnPress(const Freeze::KeyPressEvent& event)
-    {
-        FZ_INFO("SHIT IS WORKING");
-        return true;
-    }
+  static void OnEvent(Freeze::Event& e);
 
-    static void OnEvent(Freeze::Event& e);
+  void OnImGui();
 
-    void OnImGui();
+  glm::mat4 GetCurrentProjectionMatrix() { return m_Camera->GetProjectionViewMatrix(); }
+  std::shared_ptr<Player> GetPlayerInstance() { return m_Player; }
 
-    glm::mat4 GetCurrentProjectionMatrix() { return m_Camera->GetProjectionViewMatrix(); }
-    std::shared_ptr<Player> GetPlayerInstance() { return m_Player; }
+  void Update(float deltaTime);
 
-    void Update(float deltaTime);
-
-    ~World();
+  ~World();
 private:
+  std::shared_ptr<Freeze::Physics::StaticBody> m_Platform = std::make_shared<Freeze::Physics::StaticBody>();
+  std::shared_ptr<Player> m_Player = std::make_shared<Player>();
+  std::shared_ptr<Enemy> m_Enemy = std::make_shared<Enemy>();
 
-    std::shared_ptr<Freeze::Camera> m_Camera;
-
-    std::shared_ptr<Freeze::Physics::StaticBody> m_Platform = std::make_shared<Freeze::Physics::StaticBody>();
-
-    std::shared_ptr<Player> m_Player = std::make_shared<Player>();
+  std::shared_ptr<Freeze::Camera> m_Camera;
 private:
     bool m_OpenImGui = true;
 
