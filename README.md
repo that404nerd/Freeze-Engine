@@ -32,5 +32,3 @@ make -j5
 ./bin/Sandbox
 ```
 Also for debugging, compile with this: `cmake -DCMAKE_BUILD_TYPE=Debug ..`
-
-

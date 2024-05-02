@@ -1,6 +1,5 @@
 #pragma once
 
-#include <GL/glew.h>
 #include <glm/glm.hpp>
 #include <imgui.h>
 
@@ -17,23 +16,17 @@
 
 class Player : public Entity {
 public:
-    Player();
+  Player();
 
-    void CreateEntity() override;
-    void RenderEntity() override;
+  void CreateEntity() override;
+  void RenderEntity() override;
 
-    void OnImGui();
+  void OnImGui();
 
-    void MovePlayer();
+  void MovePlayer();
 
-    ~Player();
+  ~Player();
 private:
-    std::shared_ptr<Freeze::Physics::DynamicBody> m_PhysicsEntity = std::make_shared<Freeze::Physics::DynamicBody>(); // dynamic
-    std::shared_ptr<Freeze::Physics::DynamicBody> m_PhysicsEntity1 = std::make_shared<Freeze::Physics::DynamicBody>(); // dynamic
-
-    Freeze::ShapeRenderer* m_Shape = new Freeze::ShapeRenderer();
-
-    glm::mat4 m_PlayerMove = glm::mat4(1.0f); 
-    glm::vec4 m_ColorChoose = { 0.3f, 0.6f, 0.4f, 0.2f };
-    float playerColors[4] = { 0.3f, 0.6f, 0.4f, 0.2f };
+  std::shared_ptr<Freeze::Physics::DynamicBody> m_PhysicsEntity = std::make_shared<Freeze::Physics::DynamicBody>(); // dynamic
+  Freeze::ShapeRenderer* m_Shape = new Freeze::ShapeRenderer();
 };

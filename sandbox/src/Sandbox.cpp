@@ -4,8 +4,8 @@ Sandbox::Sandbox() {}
 
 void Sandbox::OnInit()
 {
-    // Load World Data First
-    m_World->Init();
+  // Load World Data First
+  m_World->Init();
 }
 
 void Sandbox::OnEvent(Freeze::Event& event)
