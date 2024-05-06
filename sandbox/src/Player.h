@@ -27,6 +27,6 @@ public:
 
   ~Player();
 private:
-  std::shared_ptr<Freeze::Physics::DynamicBody> m_PhysicsEntity = std::make_shared<Freeze::Physics::DynamicBody>(); // dynamic
+  std::shared_ptr<Freeze::Physics::DynamicBody> m_PhysicsEntity = std::make_shared<Freeze::Physics::DynamicBody>("Player");
   Freeze::ShapeRenderer* m_Shape = new Freeze::ShapeRenderer();
 };

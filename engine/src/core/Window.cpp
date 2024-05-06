@@ -30,34 +30,36 @@ namespace Freeze
         }
 
         glfwSetWindowUserPointer(m_Window, &m_WindowData);
-
-        glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
-		{
-            WindowDataFn* data = static_cast<WindowDataFn*>(glfwGetWindowUserPointer(window));
-			m_Width = width;
-			m_Height = height;
-
-			if (data && data->callbackFn) {
-                WindowResizeEvent event(m_Width, m_Height);
-                data->callbackFn(event);
-            }
-		});
-
-        glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
-        {
-            WindowDataFn* data = static_cast<WindowDataFn*>(glfwGetWindowUserPointer(window));
-
-            m_IsWindowClosed = true;
-
-            if(data && data->callbackFn)
-            {
-                WindowCloseEvent event;
-                data->callbackFn(event);
-            }
-        });
-
         return true;
     }
+    
+    void Window::InitCallbacks()
+    {
+      glfwSetWindowSizeCallback(m_Window, [](GLFWwindow* window, int width, int height)
+		  {
+        WindowDataFn* data = static_cast<WindowDataFn*>(glfwGetWindowUserPointer(window));
+        m_Width = width;
+        m_Height = height;
+
+        if (data && data->callbackFn) {
+          WindowResizeEvent event(m_Width, m_Height);
+          data->callbackFn(event);
+        }
+		  });
+
+      glfwSetWindowCloseCallback(m_Window, [](GLFWwindow* window)
+      {
+          WindowDataFn* data = static_cast<WindowDataFn*>(glfwGetWindowUserPointer(window));
+
+          m_IsWindowClosed = true;
+
+          if(data && data->callbackFn)
+          {
+              WindowCloseEvent event;
+              data->callbackFn(event);
+          }
+      });
+    }  
 
     void Window::CreateWindowContext()
     {

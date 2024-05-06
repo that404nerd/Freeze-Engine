@@ -8,11 +8,12 @@ namespace Freeze
     m_Window = std::make_unique<Window>();
     m_Window->CreateWindow(width, height, title);
     m_Window->CreateWindowContext();
+    m_Window->InitCallbacks();
     m_Window->SetEventCallbackFunction(Application::OnEvent);
 
     InitGLEW();
 
-    EnableOpenGLDebug();
+    EnableOpenGLDebug(); // NOTE: Only for debugging
     Renderer2D::InitRenderer();
     Audio::InitAudioSystem();
 
@@ -28,7 +29,7 @@ namespace Freeze
   {
     EventDispatcher dispatcher(e);
 
-   auto OnResizeHandler = [](WindowResizeEvent& event) {
+    auto OnResizeHandler = [](WindowResizeEvent& event) {
       OnResize(event);
       return true;
     };

@@ -18,30 +18,33 @@ namespace Freeze
     class Window
     {
     public:
-        Window();
+      Window();
 
-        bool CreateWindow(uint32_t width, uint32_t height, const std::string &title);
-        void CreateWindowContext();
-        static GLFWwindow *GetWindowInstance() { return m_Window; }
+      bool CreateWindow(uint32_t width, uint32_t height, const std::string &title);
+      void CreateWindowContext();
+      
+      void InitCallbacks();
 
-        static uint32_t GetWindowWidth() { return m_Width; }
-        static uint32_t GetWindowHeight() { return m_Height; }
+      static GLFWwindow *GetWindowInstance() { return m_Window; }
 
-        bool IsWindowClosed() { return m_IsWindowClosed; }
+      static uint32_t GetWindowWidth() { return m_Width; }
+      static uint32_t GetWindowHeight() { return m_Height; }
 
-        void SetEventCallbackFunction(const EventCallbackFn& callback) { m_WindowData.callbackFn = callback; } // Use to call OnEvent in Application.cpp
+      bool IsWindowClosed() { return m_IsWindowClosed; }
 
-        static void DestroyWindow();
+      void SetEventCallbackFunction(const EventCallbackFn& callback) { m_WindowData.callbackFn = callback; } // Use to call OnEvent in Application.cpp
+
+      static void DestroyWindow();
 
     private:
-        static GLFWwindow* m_Window;
-        static uint32_t m_Width, m_Height;
+      static GLFWwindow* m_Window;
+      static uint32_t m_Width, m_Height;
 
-        struct WindowDataFn {
-            EventCallbackFn callbackFn;
-        };
+      struct WindowDataFn {
+          EventCallbackFn callbackFn;
+      };
 
-        WindowDataFn m_WindowData;
-        static bool m_IsWindowClosed;
+      WindowDataFn m_WindowData;
+      static bool m_IsWindowClosed;
     };
 };

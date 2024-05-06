@@ -10,8 +10,8 @@ void World::Init()
   Freeze::Audio::LoadAudioFile(Freeze::Utils::GetFilePath("sandbox/assets/music/e1m1_doom.wav"));
 
   InitPlatformData();
-  m_Player->CreateEntity();
   m_Enemy->CreateEntity();
+  m_Player->CreateEntity();
 }
 
 void World::OnEvent(Freeze::Event& e)
