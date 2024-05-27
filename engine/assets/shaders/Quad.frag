@@ -5,5 +5,5 @@ in vec4 f_Color;
 
 void main()
 {
-    o_QuadColor = f_Color;
+  o_QuadColor = f_Color;
 }

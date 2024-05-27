@@ -1,15 +1,17 @@
 #include "Renderer2D.h"
+#include <glm/ext/matrix_transform.hpp>
+#include <glm/trigonometric.hpp>
 
 namespace Freeze {
 
   void RenderCommands::SetRenderColor(const glm::vec4& color)
   {
-      glClearColor(color.r, color.g, color.b, color.a);
+    glClearColor(color.r, color.g, color.b, color.a);
   }
 
   void RenderCommands::RenderClear()
   {
-      glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   }
 
   //////////////////////////////////////////// 2D Batch Rendering //////////////////////////////////////////////////////
@@ -17,7 +19,7 @@ namespace Freeze {
   struct QuadVertex {
     // Vertex has a position, color for now..
     glm::vec3 Position;
-    glm::vec4 Color; 
+    glm::vec4 Color;
   };
 
   struct TriangleVertex {
@@ -166,7 +168,6 @@ namespace Freeze {
   {
     if (m_RendererData->QuadIndexCount) // Check if not zero
     {
-        // The below gives us the data that needs to be renderer (Current - Initial)
         uint32_t dataSize = (uint32_t)((uint8_t*)m_RendererData->QuadVertexBufferCurrent - (uint8_t*)m_RendererData->QuadVertexBufferStart);
         m_RendererData->QuadVertexBuffer->SetVertexBufferData(m_RendererData->QuadVertexBufferStart, dataSize);
         m_RendererData->QuadShader->UseShader();
@@ -211,36 +212,54 @@ namespace Freeze {
     m_RendererData->TriangleVertexBuffer->BindVertexBuffer();
     m_RendererData->TriangleVertexBuffer->SetVertexBufferData(m_RendererData->TriangleVertexBufferStart, sizeTriangle); // Set the vertex buffer data to the beginning of the buffer
   }
+  
+   void ShapeRenderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color) {
+    // Calculate transformation matrix
+    glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(position, 0.0f))
+                        * glm::scale(glm::mat4(1.0f), glm::vec3(size, 1.0f)); // Ensure correct scale along z-axis
 
-  void ShapeRenderer::DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color) {
-    // If the index count exceeds MaxIndex (which could happen...)
-    if (m_RendererData->QuadIndexCount >= m_RendererData->MaxQuadIndices) {
-        EndBatch(); // Reset the data to the beginning of the buffer
-        NextBatch(); // Render what's left and start batching again
+    // Define quad vertices in object space
+    glm::vec4 quadVertices[4] = {
+        glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f), // Top-left
+        glm::vec4(0.5f, -0.5f, 0.0f, 1.0f),  // Bottom-left
+        glm::vec4(0.5f, 0.5f, 0.0f, 1.0f),   // Bottom-right
+        glm::vec4(-0.5f, 0.5f, 0.0f, 1.0f)   // Top-right
+    };
+
+    // Update vertex buffer with transformed vertices
+    for (int i = 0; i < 4; ++i) {
+        m_RendererData->QuadVertexBufferCurrent->Position = transform * quadVertices[i];
+        m_RendererData->QuadVertexBufferCurrent->Color = color;
+        m_RendererData->QuadVertexBufferCurrent++;
     }
 
-    // Calculate the half-width and half-height of the quad
-    float halfWidth = size.x / 2.0f;
-    float halfHeight = size.y / 2.0f;
+    // Update index count
+    m_RendererData->QuadIndexCount += 6;
+  }
 
-    // Calculate the positions of the vertices based on the provided position and size (need to follow the order below)
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x - halfWidth, position.y - halfHeight, 0.0f }; // bottom left
-    m_RendererData->QuadVertexBufferCurrent->Color = color;
-    m_RendererData->QuadVertexBufferCurrent++;
 
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x + halfWidth, position.y - halfHeight, 0.0f }; // bottom right
-    m_RendererData->QuadVertexBufferCurrent->Color = color;
-    m_RendererData->QuadVertexBufferCurrent++;
+  void ShapeRenderer::DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color) {
+    // Calculate transformation matrix
+    glm::mat4 transform = glm::translate(glm::mat4(1.0f), glm::vec3(position, 0.0f))
+                        * glm::rotate(glm::mat4(1.0f), rotation, glm::vec3(0.0f, 0.0f, 1.0f))
+                        * glm::scale(glm::mat4(1.0f), glm::vec3(size, 1.0f)); 
+ 
 
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x + halfWidth, position.y + halfHeight, 0.0f }; // top right
-    m_RendererData->QuadVertexBufferCurrent->Color = color;
-    m_RendererData->QuadVertexBufferCurrent++;
+    glm::vec4 quadVertices[4] = {
+        glm::vec4(-0.5f, -0.5f, 0.0f, 1.0f), // Top-left
+        glm::vec4(0.5f, -0.5f, 0.0f, 1.0f),  // Bottom-left
+        glm::vec4(0.5f, 0.5f, 0.0f, 1.0f),   // Bottom-right
+        glm::vec4(-0.5f, 0.5f, 0.0f, 1.0f)   // Top-right
+    };
 
-    m_RendererData->QuadVertexBufferCurrent->Position = { position.x - halfWidth, position.y + halfHeight, 0.0f }; // top left
-    m_RendererData->QuadVertexBufferCurrent->Color = color;
-    m_RendererData->QuadVertexBufferCurrent++;
+    // Update vertex buffer with transformed vertices
+    for (int i = 0; i < 4; ++i) {
+        m_RendererData->QuadVertexBufferCurrent->Position = transform * quadVertices[i];
+        m_RendererData->QuadVertexBufferCurrent->Color = color;
+        m_RendererData->QuadVertexBufferCurrent++;
+    }
 
-    // Increment the index count
+    // Update index count
     m_RendererData->QuadIndexCount += 6;
   }
 

@@ -8,7 +8,7 @@
 #include <imgui.h>
 
 #include "core/Core.h"
-#include "physics/Box2DDebugRenderer.h"
+#include "Box2DDebugRenderer.h"
 
 namespace Freeze
 {
@@ -33,12 +33,18 @@ namespace Freeze
                 m_PhysicsWorld->SetDebugDraw(m_DebugRenderer);
             }
 
+            inline void OnImGui()
+            {
+                ImGui::Begin("Box2D Debug");
+                m_PhysicsWorld->DebugDraw();
+                ImGui::End(); 
+            }
+
 
             inline void UpdatePhysicsWorld(float dt)
             {
                 m_PhysicsWorld->Step(1.0f / 60.0f, 9, 4);
-
-                // m_PhysicsWorld->DebugDraw();
+                OnImGui();
             }
 
             inline b2World* GetPhysicsWorld() { return m_PhysicsWorld; }
@@ -46,7 +52,6 @@ namespace Freeze
             inline void DestroyPhysicsWorld()
             {
                 delete m_DebugRenderer;
-                
                 m_PhysicsWorld->SetDebugDraw(nullptr);
                 m_PhysicsWorld->ClearForces();
 

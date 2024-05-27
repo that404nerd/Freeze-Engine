@@ -23,7 +23,6 @@ public:
 
   void Init();
   void InitPlatformData();
-  void RenderPlatform();
 
   static void OnEvent(Freeze::Event& e);
 
@@ -32,11 +31,12 @@ public:
   glm::mat4 GetCurrentProjectionMatrix() { return m_Camera->GetProjectionViewMatrix(); }
   std::shared_ptr<Player> GetPlayerInstance() { return m_Player; }
 
-  void Update(float deltaTime);
+  void Update(float dt);
 
   ~World();
 private:
   std::shared_ptr<Freeze::Physics::StaticBody> m_Platform = std::make_shared<Freeze::Physics::StaticBody>("Platform");
+  std::shared_ptr<Freeze::ShapeRenderer> m_QuadShape = std::make_shared<Freeze::ShapeRenderer>();
   std::shared_ptr<Player> m_Player = std::make_shared<Player>();
   std::shared_ptr<Enemy> m_Enemy = std::make_shared<Enemy>();
 

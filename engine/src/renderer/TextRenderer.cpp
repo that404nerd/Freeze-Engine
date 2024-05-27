@@ -2,9 +2,14 @@
 
 namespace Freeze {
 
-    TextRenderer::~TextRenderer()
-    {
+  TextRenderer::TextRenderer()
+  {
 
-    }
+  }
+
+  TextRenderer::~TextRenderer()
+  {
+
+  }
 
 }

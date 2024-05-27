@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "physics/Box2DDebugRenderer.h"
 
 namespace Freeze
 {
@@ -28,26 +29,20 @@ namespace Freeze
   void Application::OnEvent(Event& e)
   {
     EventDispatcher dispatcher(e);
-
+    
     auto OnResizeHandler = [](WindowResizeEvent& event) {
-      OnResize(event);
+      OnResize(event); // Assuming OnResize is a member function of Window
       return true;
     };
 
     auto OnCloseHandler = [](WindowCloseEvent& event) {
-      Window::DestroyWindow();
-      return true;
+        Window::DestroyWindow(); // Assuming DestroyWindow is a static member function
+        return true;
     };
 
-    auto OnKeyPressHandler = [](KeyPressEvent& event) {
-      OnPress(event);
-      return true;
-    };
 
     // Dispatch the event using the lambda
     dispatcher.Dispatch<WindowResizeEvent>(OnResizeHandler);
-    dispatcher.Dispatch<WindowCloseEvent>(OnCloseHandler);
-    dispatcher.Dispatch<KeyPressEvent>(OnKeyPressHandler);
   }
 
   void Application::Run()
@@ -71,7 +66,6 @@ namespace Freeze
 
       Physics::PhysicsModule::UpdatePhysicsWorld(deltaTime);
       m_Sandbox->OnUpdate(deltaTime);
-
 
       Renderer2D::Flush();
 

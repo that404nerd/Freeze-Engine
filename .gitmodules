@@ -19,3 +19,6 @@
 [submodule "lib/soloud"]
 	path = lib/soloud
 	url = https://github.com/systemcoding/soloud
+[submodule "lib/freetype"]
+	path = lib/freetype
+	url = https://gitlab.freedesktop.org/freetype/freetype.git

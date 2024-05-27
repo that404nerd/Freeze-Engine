@@ -13,7 +13,7 @@ public:
     const std::string& PrintEntityName() { return m_EntityID; }
 
     virtual void CreateEntity() = 0;
-    virtual void RenderEntity() = 0;
+    virtual void RenderEntity(float dt) = 0;
 
     virtual ~Entity() = default;
 private:

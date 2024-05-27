@@ -8,6 +8,7 @@
 #include <memory>
 
 #include "core/OpenGLDebug.h"
+#include "physics/Box2DDebugRenderer.h"
 
 #include "World.h"
 

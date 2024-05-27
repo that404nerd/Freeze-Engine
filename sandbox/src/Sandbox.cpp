@@ -1,4 +1,5 @@
 #include "Sandbox.h"
+#include "physics/InitPhysics.h"
 
 Sandbox::Sandbox() {}
 
@@ -10,28 +11,30 @@ void Sandbox::OnInit()
 
 void Sandbox::OnEvent(Freeze::Event& event)
 {
-    m_World->OnEvent(event);
-    m_World->GetPlayerInstance()->MovePlayer();    
+  m_World->OnEvent(event);
+  m_World->GetPlayerInstance()->MovePlayer();    
 }
 
 void Sandbox::OnImGui()
 {
-    ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - 410, 10), ImGuiCond_Always);
-    ImGui::SetNextWindowSize(ImVec2(400.0f, 240.0f), ImGuiCond_Always);
+  ImGui::SetNextWindowPos(ImVec2(ImGui::GetIO().DisplaySize.x - 410, 10), ImGuiCond_Always);
+  ImGui::SetNextWindowSize(ImVec2(400.0f, 240.0f), ImGuiCond_Always);
 
-    ImGui::Begin("Settings", &m_OpenImGuiWindow, ImGuiWindowFlags_NoMove);
-    m_World->GetPlayerInstance()->OnImGui(); 
+  ImGui::Begin("Settings", &m_OpenImGuiWindow, ImGuiWindowFlags_NoMove);
+  m_World->GetPlayerInstance()->OnImGui(); 
 
-    ImGui::Dummy(ImVec2(0.0f, 20.0f));
+  ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
-    m_World->OnImGui();
+  ImGui::Dummy(ImVec2(0.0f, 20.0f));
 
-    ImGui::End();
+  m_World->OnImGui();
+
+  ImGui::End();
 }
 
 void Sandbox::OnUpdate(float dt)
 {
-    m_World->Update(dt);
+  m_World->Update(dt);
 }
 
 Sandbox::~Sandbox()

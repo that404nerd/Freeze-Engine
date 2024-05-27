@@ -17,8 +17,7 @@ namespace Freeze {
     // Interface for other physics body types
     class PhysicsBody {
     public:
-      virtual void CreateBody(const b2Vec2& size, const b2Vec2& positions) = 0;
-      virtual void RenderBody(const glm::vec4& color) = 0; // TODO: This is temporary, in the future the rendering needs can be done as wish in the sandbox
+      virtual void CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation) = 0;
       virtual ~PhysicsBody() {}
     };
 
@@ -35,15 +34,16 @@ namespace Freeze {
         b2Body* Body;
         b2FixtureDef FixtureDef;
         b2PolygonShape Shape;
-        ShapeRenderer* RendShape = new ShapeRenderer();
+        std::shared_ptr<ShapeRenderer> RendShape = std::make_shared<ShapeRenderer>();
 
         std::string BodyID;
         b2Vec2 Positions = { 0.0f, 0.0f };
         b2Vec2 Size = { 0.0f, 0.0f };
+        float Rotation = 0.0f;
       };
 
-      std::vector<DynamicBodyData*> m_BodyData;
-      DynamicBodyData* m_Current = nullptr;
+      std::vector<std::shared_ptr<DynamicBodyData>> m_BodyData;
+      std::shared_ptr<DynamicBodyData> m_Current;
 
       float m_Friction;
       float m_Density;
@@ -56,8 +56,7 @@ namespace Freeze {
 
     public:
       DynamicBody(const std::string& bodyID);
-      void CreateBody(const b2Vec2& size, const b2Vec2& positions) override;
-      void RenderBody(const glm::vec4& color) override;
+      void CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation) override;
 
       void MoveBody(const b2Vec2& force, BODY_DIRECTION direction);
 
@@ -70,7 +69,8 @@ namespace Freeze {
       float GetDensity() const { return m_Density; }
       float GetRestitution() const { return m_Restitution; } 
 
-      DynamicBodyData* GetBodyData();
+      std::shared_ptr<DynamicBodyData> GetBodyData() { return m_Current; };
+      b2Body* GetBody() { return m_Current->Body; }
 
       ~DynamicBody();
     };
@@ -78,8 +78,7 @@ namespace Freeze {
     class StaticBody : public PhysicsBody {
     public:
       StaticBody(const std::string& bodyID);
-      void CreateBody(const b2Vec2& size, const b2Vec2& positions) override;
-      void RenderBody(const glm::vec4& color) override;
+      void CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation=0.0f) override;
       ~StaticBody();
 
     private:
@@ -88,18 +87,21 @@ namespace Freeze {
         b2Body* Body;
         b2FixtureDef FixtureDef;
         b2PolygonShape Shape;
-        ShapeRenderer* RendShape = new ShapeRenderer();
+        std::shared_ptr<ShapeRenderer> RendShape = std::make_shared<ShapeRenderer>();
         std::string BodyID; // Only for debugging
 
-        b2Vec2 Positions;
-        b2Vec2 Size;
+        b2Vec2 Positions = { 0.0f, 0.0f };
+        b2Vec2 Size = { 0.0f, 0.0f };
+        float Rotation = 0.0f;
       };
 
-      std::vector<StaticBodyData*> m_BodyData;
-      StaticBodyData* m_Current = nullptr;
+      std::vector<std::shared_ptr<StaticBodyData>> m_BodyData;
+      std::shared_ptr<StaticBodyData> m_Current;
+
       std::string m_BodyID;
+    public:
+      std::shared_ptr<StaticBodyData> GetBodyData() { return m_Current; }
+      b2Body* GetBody() { return m_Current->Body; }
     };
-
-    }
-
-}
+  };
+};

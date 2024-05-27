@@ -37,6 +37,7 @@ namespace Freeze
         void SetVector3f(uint32_t loc, const glm::vec3& vector);
         void SetVector4f(uint32_t loc, const glm::vec4& vector);
         void SetInteger(uint32_t loc, int index);
+        void SetFloat1f(uint32_t loc, float value);
 
 
     private:

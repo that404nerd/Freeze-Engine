@@ -10,13 +10,14 @@ namespace Freeze {
     {
     }
 
-    void DynamicBody::CreateBody(const b2Vec2& size, const b2Vec2& position) {
+    void DynamicBody::CreateBody(const b2Vec2& size, const b2Vec2& position, float rotation) {
       // Create a new DynamicBodyData instance
-      DynamicBodyData* dynamicBodyData = new DynamicBodyData();
+      auto dynamicBodyData = std::make_shared<DynamicBodyData>();
 
       // Initialize size and position
       dynamicBodyData->Size = size;
       dynamicBodyData->Positions = position;
+      dynamicBodyData->Rotation = rotation;
 
       // Calculate half body size
       b2Vec2 halfBodySize = b2Vec2(size.x * 0.5f, size.y * 0.5f);
@@ -24,10 +25,9 @@ namespace Freeze {
       // Configure body definition
       dynamicBodyData->BodyDef.type = b2_dynamicBody;
       dynamicBodyData->BodyDef.position = dynamicBodyData->Positions;
+      dynamicBodyData->BodyDef.angle = dynamicBodyData->Rotation;
 
-      // Create body in physics world
       dynamicBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&dynamicBodyData->BodyDef);
-
       // Set shape as a box
       dynamicBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y);
 
@@ -46,16 +46,6 @@ namespace Freeze {
       m_BodyData.push_back(dynamicBodyData);
     }
 
-    void DynamicBody::RenderBody(const glm::vec4& color) {
-      for(auto& body : m_BodyData)
-      {
-        b2Vec2 position = body->Body->GetPosition();
-        b2Vec2 size = body->Size;
-
-        body->RendShape->DrawQuad({ position.x, position.y }, { size.x, size.y }, color);
-      }
-    }
-
     void DynamicBody::MoveBody(const b2Vec2& force, BODY_DIRECTION direction)
     {
       m_Current->Body->SetAwake(true); // When body goes to sleep, moving the body causes some issues
@@ -67,18 +57,8 @@ namespace Freeze {
         m_CurrentDirection = direction;
     }
 
-    DynamicBody::DynamicBodyData* DynamicBody::GetBodyData()
-    {
-      return m_Current;
-    }
-
     DynamicBody::~DynamicBody()
     {
-      m_Current->Body->SetAwake(false);
-      for(auto& bodyData : m_BodyData) {
-        delete bodyData;
-        bodyData = nullptr;
-      }
     }
     
     /////////////////////// STATIC BODY ////////////////////
@@ -87,9 +67,9 @@ namespace Freeze {
     {
     }
 
-    void StaticBody::CreateBody(const b2Vec2& size, const b2Vec2& positions)
+    void StaticBody::CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation)
     {
-      StaticBodyData* staticBodyData = new StaticBodyData();
+      auto staticBodyData = std::make_shared<StaticBodyData>();
 
       staticBodyData->Size = size;
       staticBodyData->Positions = positions;
@@ -98,6 +78,7 @@ namespace Freeze {
 
       staticBodyData->BodyDef.type = b2_staticBody;
       staticBodyData->BodyDef.position = staticBodyData->Positions;
+      staticBodyData->BodyDef.angle = staticBodyData->Rotation;
       
       staticBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&staticBodyData->BodyDef);
       staticBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y, b2Vec2(0.0f, 0.0f), 0.0f);
@@ -110,21 +91,8 @@ namespace Freeze {
       m_BodyData.push_back(staticBodyData); 
     }
 
-    void StaticBody::RenderBody(const glm::vec4& color)
-    {
-      for(auto& body : m_BodyData)
-      {
-        b2Vec2 position = body->Body->GetPosition();
-        b2Vec2 size = body->Size;
-
-        body->RendShape->DrawQuad({ position.x, position.y }, { size.x, size.y }, color);
-      }
-    }
-
     StaticBody::~StaticBody()
     {
-      for(auto& bodyData : m_BodyData)
-        delete bodyData;
     }
 
 

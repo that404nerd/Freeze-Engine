@@ -23,12 +23,6 @@ namespace Freeze
         static void OnEvent(Event& e);
         void Run();
 
-        static bool OnPress(KeyPressEvent& event)
-        {
-          FZ_INFO(event.GetKeyCode());
-          return true;
-        }
-
         static void OnResize(WindowResizeEvent& event);
 
         virtual ~Application();

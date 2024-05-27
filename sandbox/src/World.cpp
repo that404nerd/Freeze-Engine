@@ -1,7 +1,8 @@
 #include "World.h"
+#include "physics/Box2DDebugRenderer.h"
 
 World::World()
-      :m_Camera(std::make_shared<Freeze::Camera>(glm::vec4(-20.0f, 20.0f, -12.0f, 12.0f)))
+  :m_Camera(std::make_shared<Freeze::Camera>(glm::vec4(-20.0f, 20.0f, -12.0f, 12.0f)))
 {
 }
 
@@ -10,8 +11,8 @@ void World::Init()
   Freeze::Audio::LoadAudioFile(Freeze::Utils::GetFilePath("sandbox/assets/music/e1m1_doom.wav"));
 
   InitPlatformData();
-  m_Enemy->CreateEntity();
   m_Player->CreateEntity();
+  m_Enemy->CreateEntity();
 }
 
 void World::OnEvent(Freeze::Event& e)
@@ -21,7 +22,7 @@ void World::OnEvent(Freeze::Event& e)
 
 void World::InitPlatformData()
 {
-  m_Platform->CreateBody({ 200.0f, 1.0f }, { 0.0f, -7.0f });
+  m_Platform->CreateBody({ 200.0f, 1.0f }, { 0.0f, -1.0f });
 }
 
 void World::OnImGui()
@@ -41,31 +42,15 @@ void World::OnImGui()
     Freeze::Audio::PauseAudio();
 }
 
-void World::RenderPlatform()
+void World::Update(float dt)
 {
-  m_Platform->RenderBody({1.0f, 1.0f, 1.0f, 1.0f});
-  
-}
+  m_Platform->GetBody()->SetTransform(m_Platform->GetBody()->GetPosition(), m_Platform->GetBody()->GetAngle());
+  m_QuadShape->DrawRotatedQuad({ m_Platform->GetBody()->GetPosition().x, m_Platform->GetBody()->GetPosition().y }, 
+                               { m_Platform->GetBodyData()->Size.x, m_Platform->GetBodyData()->Size.y }, m_Platform->GetBody()->GetAngle(),
+                               { 1.0f, 1.0f, 1.0f, 1.0f });
 
-void World::Update(float deltaTime)
-{
-  RenderPlatform();
-
-  float MAX_CAM_SPEED = 30.0f;
-
-  /* Camera movement testing */
-
-  if (Freeze::KeyboardInput::IsKeyPressed(GLFW_KEY_A))
-  {
-    m_Camera->SetPosition({m_CamSpeed -= MAX_CAM_SPEED * deltaTime, 0.0f, 0.0f});
-  }
-  if (Freeze::KeyboardInput::IsKeyPressed(GLFW_KEY_D))
-  {
-    m_Camera->SetPosition({m_CamSpeed += MAX_CAM_SPEED * deltaTime, 0.0f, 0.0f});
-  }
-
-  m_Player->RenderEntity();
-  m_Enemy->RenderEntity();
+  m_Player->RenderEntity(dt);
+  m_Enemy->RenderEntity(dt);
 }
 
 World::~World() {}

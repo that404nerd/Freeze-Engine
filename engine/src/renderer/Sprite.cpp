@@ -40,7 +40,6 @@ namespace Freeze {
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-
     m_Shader->UseShader();
     /* First scale, then rotate and then translate. (SRT)
        This is the advised order of transforming an object.

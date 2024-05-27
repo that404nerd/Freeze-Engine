@@ -164,7 +164,12 @@ namespace Freeze
         glUniform1i(m_GetUniformLocation, index);
     }
 
-    // I know, Renderer2D causes double deletion of shader and its bad.... (THIS IS PERMANENT)
+    void Shader::SetFloat1f(uint32_t loc, float value)
+    {
+        glUniform1f(m_GetUniformLocation, value);
+    }
+
+    // Renderer2D causes double deletion of shader and its bad.... (THIS IS PERMANENT)
     void Shader::DeleteShaders()
     {
         glDeleteProgram(m_ShaderProgramID);

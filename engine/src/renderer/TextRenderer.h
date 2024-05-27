@@ -6,14 +6,12 @@
 
 namespace Freeze {
 
-    class TextRenderer {
+  class TextRenderer {
+  public:
+    TextRenderer();
 
-    public:
-        TextRenderer();
-
-        ~TextRenderer();
-
-    };
+    ~TextRenderer();
+  };
 
 
 }

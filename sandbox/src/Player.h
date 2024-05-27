@@ -19,7 +19,7 @@ public:
   Player();
 
   void CreateEntity() override;
-  void RenderEntity() override;
+  void RenderEntity(float dt) override;
 
   void OnImGui();
 
@@ -28,5 +28,5 @@ public:
   ~Player();
 private:
   std::shared_ptr<Freeze::Physics::DynamicBody> m_PhysicsEntity = std::make_shared<Freeze::Physics::DynamicBody>("Player");
-  Freeze::ShapeRenderer* m_Shape = new Freeze::ShapeRenderer();
+  std::shared_ptr<Freeze::ShapeRenderer> m_PlayerShape = std::make_shared<Freeze::ShapeRenderer>();
 };
