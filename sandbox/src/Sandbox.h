@@ -13,6 +13,8 @@
 #include "renderer/Renderer2D.h"
 #include "core/Window.h"
 
+#include "core/AudioSystem.h"
+
 #include "physics/PhysicsBody.h"
 
 class Sandbox
