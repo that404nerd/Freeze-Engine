@@ -31,20 +31,22 @@ namespace Freeze {
 
     static void ShutdownRenderer();
     ~Renderer2D() {};
-  protected:
-    inline static glm::mat4 m_TransformMatrix;
-  };
-
-  class ShapeRenderer : public Renderer2D {
   public:
-
     // Quad
-    void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
-    void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color);
-    void DrawTexturedQuad(const std::string& filepath, const glm::vec2& position, const glm::vec2& size);
+    static void DrawQuad(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
+    static void DrawRotatedQuad(const glm::vec2& position, const glm::vec2& size, float rotation, const glm::vec4& color);
+    static void DrawTexturedQuad(const std::string& filepath, const glm::vec2& position, const glm::vec2& size);
 
     // Triangle
-    void DrawTriangle(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
-  };
+    static void DrawTriangle(const glm::vec2& position, const glm::vec2& size, const glm::vec4& color);
 
+    // Points
+    static void DrawPoint(const glm::vec2& position, const glm::vec4& color); // glVertex2f kinda implementation
+    
+    // Lines
+    static void SetLineWidth(float width);
+    static void DrawLine(const glm::vec2& start, const glm::vec2& end, const glm::vec4& color); // Default size (1.0f)
+  private:
+    inline static float m_Width;
+  };
 };

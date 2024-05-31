@@ -3,6 +3,7 @@
 #include <GL/glew.h>
 
 #include "core/Core.h"
+#include "renderer/Texture.h"
 
 #include <cstdint>
 
@@ -10,51 +11,61 @@ namespace Freeze {
     class VertexBuffer 
     {
     public:
-        VertexBuffer() = default;
+      void AddVertexBuffer(const void* data, uint32_t size);
+      void AddVertexBuffer(uint32_t size, GLenum drawType);
 
-        void AddVertexBuffer(const void* data, uint32_t size);
-        void AddVertexBuffer(uint32_t size, GLenum drawType);
+      void SetVertexBufferData(const void* data, uint32_t size);
 
-        void SetVertexBufferData(const void* data, uint32_t size);
+      void BindVertexBuffer() const;
+      void UnbindVertexBuffer() const;
 
-        void BindVertexBuffer() const;
-        void UnbindVertexBuffer() const;
-
-        ~VertexBuffer();
+      ~VertexBuffer();
     private:
-        uint32_t m_VertexBufferObjectID;
+       uint32_t m_VertexBufferObjectID;
     };
 
     class IndexBuffer
     {
     public:
-        IndexBuffer() = default;
+      
+      void AddIndexBuffer(uint32_t* data, uint32_t size, GLenum drawType);
 
-        void AddIndexBuffer(uint32_t* data, uint32_t size, GLenum drawType);
+      void BindIndexBuffer() const;
+      void UnbindIndexBuffer() const;
 
-        void BindIndexBuffer() const;
-        void UnbindIndexBuffer() const;
-
-        ~IndexBuffer();
+      ~IndexBuffer();
     private:
-        uint32_t m_IndexBufferObjectID;
+      uint32_t m_IndexBufferObjectID;
     };
 
     class VertexArray
     {
     public:
-        VertexArray() = default;
+      void AddVertexArray();
 
-        void AddVertexArray();
+      void BindVertexArray() const;
+      void UnbindVertexArray() const;
 
-        void BindVertexArray() const;
-        void UnbindVertexArray() const;
+      uint32_t GetVertexArrayID() { return m_VertexArrayID; }
 
-        uint32_t GetVertexArrayID() { return m_VertexArrayID; }
-
-        ~VertexArray();
+      ~VertexArray();
 
     private:
-        uint32_t m_VertexArrayID;
+      uint32_t m_VertexArrayID;
     };
+
+    class Framebuffer {
+    public:
+      void CreateFrameBuffer(uint32_t width, uint32_t height);
+   
+      const void BindFrameBuffer() const;
+      const void UnbindFrameBuffer() const;
+      const uint32_t GetFrameBufferTexture() const;
+
+      ~Framebuffer();
+    private:
+      uint32_t m_fbID, m_TexAttachment, m_RBO;
+      uint32_t m_Width, m_Height;
+    };
+
 };

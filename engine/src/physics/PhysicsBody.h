@@ -34,7 +34,6 @@ namespace Freeze {
         b2Body* Body;
         b2FixtureDef FixtureDef;
         b2PolygonShape Shape;
-        std::shared_ptr<ShapeRenderer> RendShape = std::make_shared<ShapeRenderer>();
 
         std::string BodyID;
         b2Vec2 Positions = { 0.0f, 0.0f };
@@ -87,7 +86,6 @@ namespace Freeze {
         b2Body* Body;
         b2FixtureDef FixtureDef;
         b2PolygonShape Shape;
-        std::shared_ptr<ShapeRenderer> RendShape = std::make_shared<ShapeRenderer>();
         std::string BodyID; // Only for debugging
 
         b2Vec2 Positions = { 0.0f, 0.0f };

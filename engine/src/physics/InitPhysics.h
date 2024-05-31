@@ -3,12 +3,13 @@
 #include <GL/glew.h>
 #include <box2d/box2d.h>
 
-#include <memory>
-
 #include <imgui.h>
+#include <memory>
 
 #include "core/Core.h"
 #include "Box2DDebugRenderer.h"
+#include "renderer/Buffer.h"
+#include "renderer/Renderer2D.h"
 
 namespace Freeze
 {
@@ -33,18 +34,11 @@ namespace Freeze
                 m_PhysicsWorld->SetDebugDraw(m_DebugRenderer);
             }
 
-            inline void OnImGui()
-            {
-                ImGui::Begin("Box2D Debug");
-                m_PhysicsWorld->DebugDraw();
-                ImGui::End(); 
-            }
-
-
             inline void UpdatePhysicsWorld(float dt)
             {
                 m_PhysicsWorld->Step(1.0f / 60.0f, 9, 4);
-                OnImGui();
+
+                // m_PhysicsWorld->DebugDraw();
             }
 
             inline b2World* GetPhysicsWorld() { return m_PhysicsWorld; }

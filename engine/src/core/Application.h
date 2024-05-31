@@ -8,6 +8,7 @@
 #include "physics/InitPhysics.h"
 #include "AudioSystem.h"
 #include "imgui/ImGuiContext.h"
+#include "renderer/Buffer.h"
 
 #include "Core.h"
 
@@ -29,12 +30,11 @@ namespace Freeze
 
     private:
         bool InitGLEW();
-
-        static void framebuffer_size_callback(GLFWwindow* window, int width, int height);
     private:
         inline static std::shared_ptr<Sandbox> m_Sandbox;
         std::shared_ptr<Window> m_Window;
         std::shared_ptr<Renderer2D> m_Renderer2D;
         std::shared_ptr<ImGuiContext> m_ImGuiContext;
+
     };
 };

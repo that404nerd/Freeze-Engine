@@ -17,9 +17,6 @@ namespace Freeze
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
       glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
-      m_TextureShader->LoadShadersFromFiles(Utils::GetFilePath("engine/assets/shaders/TexturedQuad.vert"),
-                                            Utils::GetFilePath("engine/assets/shaders/TexturedQuad.frag"));
     }
 
     void Texture::LoadTextureFile(const std::string& filepath)
@@ -38,11 +35,6 @@ namespace Freeze
       }
     }
 
-    void Texture::Update()
-    {
-      m_TextureShader->UseShader(); 
-    }
-
     void Texture::BindTexture(int slot) const
     {
       glActiveTexture(GL_TEXTURE0 + slot);
@@ -58,7 +50,7 @@ namespace Freeze
     {
       if (m_ImageData != nullptr) {
         stbi_image_free(m_ImageData);
-        FZ_INFO("Freed image data for texture {}", m_FilePath); // Assuming you store the filepath
+        FZ_INFO("Freed image data for texture {}", m_FilePath);
       } else {
         FZ_ERROR("Texture image data was already freed or not loaded!");
       }

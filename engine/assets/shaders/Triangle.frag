@@ -6,4 +6,5 @@ in vec4 f_TriangleColor;
 void main()
 {
     o_TriangleColor = f_TriangleColor;
+
 }

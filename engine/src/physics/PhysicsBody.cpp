@@ -73,6 +73,7 @@ namespace Freeze {
 
       staticBodyData->Size = size;
       staticBodyData->Positions = positions;
+      staticBodyData->Rotation = rotation;
 
       b2Vec2 halfBodySize = b2Vec2(size.x * 0.5f, size.y * 0.5f);
 

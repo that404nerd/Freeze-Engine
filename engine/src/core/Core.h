@@ -46,5 +46,21 @@ namespace Freeze {
             std::string newFilePath = rootDir + filepath;
             return newFilePath;
         }
+      
+        // A shitty function that returns the name of the OS (uses macros but it works)
+        static const char* GetOSName()
+        {
+          #if defined(_WIN32) || defined(_WIN64)
+            #error "Windows is not supported!"
+          #else
+            #ifdef __linux
+              const char* os = "Linux";
+              return os;
+          #else
+            #error "Unknown OS!"
+          #endif
+          #endif
+          
+        }
     };
 };

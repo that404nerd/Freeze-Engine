@@ -1,13 +1,14 @@
-- [x] Support for 2D Rendering and Drawing primitve shapes
+- [x] Support for 2D Rendering and Drawing shapes
 - [x] Remove `GLFWwindow* window` parameter from the `Freeze::Keyboard::IsKeyPressed()` and Mouse API
 - [x] Make Engine Specific Shaders (No Plans for API Abstraction yet)
 - [x] Make delta time work!
 - [x] Make camera work with the Input System (No plans for API abstraction yet)
 - [x] Batch Rendering
 - [x] Rewrite the Physics API to support the new 2D Renderer
+- [x] Make an Event System
 
 - [] Create functions to manage movement of camera (including rotation)
-- [] Make an Event System
 - [] Make a small entity editor (Edit it's position, rotation, etc..)
+- [] Call Flush() at the end of a scene and creation of scenes
 - [] Allow for enabling Debug Render (BOX2D) in a seperate imgui window and not affect the sandbox
 - [] Abstract glVertexAttribPointer for setting vertex data easily

@@ -1,5 +1,4 @@
 #include "Application.h"
-#include "physics/Box2DDebugRenderer.h"
 
 namespace Freeze
 {
@@ -14,12 +13,11 @@ namespace Freeze
 
     InitGLEW();
 
-    EnableOpenGLDebug(); // NOTE: Only for debugging
     Renderer2D::InitRenderer();
     Audio::InitAudioSystem();
 
     m_ImGuiContext->CreateImGuiContext(m_Window->GetWindowInstance());
-
+    
     Physics::PhysicsModule::InitPhysicsWorld();
 
     m_Sandbox = std::make_shared<Sandbox>();
@@ -51,7 +49,7 @@ namespace Freeze
 
     while (!m_Window->IsWindowClosed())
     {
-      float currentFrame = glfwGetTime();
+     float currentFrame = glfwGetTime();
       float deltaTime = currentFrame - lastFrame;
       lastFrame = currentFrame;
 
@@ -67,14 +65,14 @@ namespace Freeze
       Physics::PhysicsModule::UpdatePhysicsWorld(deltaTime);
       m_Sandbox->OnUpdate(deltaTime);
 
-      Renderer2D::Flush();
-
+      // Renderer2D::Flush();
+      
       // Render ImGui Stuff
       m_ImGuiContext->RenderImGui();
 
       glfwPollEvents();
-      glfwSwapBuffers(m_Window->GetWindowInstance());
-    }
+      glfwSwapBuffers(m_Window->GetWindowInstance());    
+    }  
   }
 
   void Application::OnResize(WindowResizeEvent& event)
