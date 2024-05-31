@@ -10,5 +10,4 @@
 - [] Create functions to manage movement of camera (including rotation)
 - [] Make a small entity editor (Edit it's position, rotation, etc..)
 - [] Call Flush() at the end of a scene and creation of scenes
-- [] Allow for enabling Debug Render (BOX2D) in a seperate imgui window and not affect the sandbox
 - [] Abstract glVertexAttribPointer for setting vertex data easily
