@@ -30,6 +30,7 @@ mkdir build
 cmake ..
 make -j5
 ./bin/Sandbox
+```
 
 ## Version 0.4:
 - Better Batch Renderer
@@ -39,5 +40,5 @@ make -j5
 - Added OS and GPU Info to Sandbox
 - Fixed a crash when calling the OnClose() Window Event
 - Fixed several bugs
-```
+
 Also for debugging, compile with this: `cmake -DCMAKE_BUILD_TYPE=Debug ..`
