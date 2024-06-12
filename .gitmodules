@@ -1,6 +1,6 @@
 [submodule "lib/imgui"]
 	path = lib/imgui
-	url = https://github.com/systemcoding/imgui.git
+	url = https://github.com/that404nerd/imgui.git
 [submodule "lib/spdlog"]
 	path = lib/spdlog
 	url = https://github.com/gabime/spdlog.git
@@ -15,10 +15,10 @@
 	url = https://github.com/aiekick/ImGuiFileDialog
 [submodule "lib/box2d"]
 	path = lib/box2d
-	url = https://github.com/systemcoding/box2d.git
+	url = https://github.com/that404nerd/box2d.git
 [submodule "lib/soloud"]
 	path = lib/soloud
-	url = https://github.com/systemcoding/soloud
+	url = https://github.com/that404nerd/soloud
 [submodule "lib/freetype"]
 	path = lib/freetype
 	url = https://gitlab.freedesktop.org/freetype/freetype.git
