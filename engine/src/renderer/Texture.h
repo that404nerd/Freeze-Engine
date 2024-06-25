@@ -19,6 +19,9 @@ namespace Freeze
     void BindTexture(int slot = 0) const;
     void UnbindTexture() const;
 
+    // NOTE: Testing method, will be moved to Renderer2D
+    void RenderTexture();
+
     uint32_t GetTextureID() { return m_TextureID; }
     
     ~Texture();

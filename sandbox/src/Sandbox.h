@@ -16,6 +16,7 @@
 #include "core/AudioSystem.h"
 
 #include "physics/PhysicsBody.h"
+#include "renderer/Texture.h"
 
 class Sandbox
 {
@@ -27,8 +28,6 @@ public:
     void OnEvent(Freeze::Event& event);
     void OnUpdate(float dt);
 
-    bool Status() { return showColliders; }
-
     ~Sandbox();
 
 private:
@@ -36,6 +35,8 @@ private:
     std::shared_ptr<Freeze::Physics::StaticBody> m_PlatformBody = std::make_shared<Freeze::Physics::StaticBody>("Body2");
 
     std::shared_ptr<Freeze::Camera> m_Camera = std::make_shared<Freeze::Camera>();
+    std::shared_ptr<Freeze::Texture> m_Texture = std::make_shared<Freeze::Texture>();
+
 
     bool showColliders = false;
 

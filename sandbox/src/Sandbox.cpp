@@ -12,6 +12,10 @@ void Sandbox::OnInit()
 
   Freeze::Audio::LoadAudioFile(Freeze::Utils::GetFilePath("sandbox/assets/music/e1m1_doom.wav"));
 
+  m_Texture->CreateTexture();
+  m_Texture->LoadTextureFile(Freeze::Utils::GetFilePath("sandbox/assets/textures/block.png"));
+  m_Texture->BindTexture();
+
   m_PlatformBody->CreateBody({ 200.0f, 1.0f }, { 0.0f, -1.0f });
 }
 
@@ -61,6 +65,7 @@ void Sandbox::OnUpdate(float dt)
 {
   float entityRotation = m_Body->GetBody()->GetAngle();
   float platformRotation = m_PlatformBody->GetBody()->GetAngle();
+
 
   Freeze::Renderer2D::DrawRotatedQuad({ m_Body->GetBody()->GetPosition().x, m_Body->GetBody()->GetPosition().y }, 
                                       { m_Body->GetBodyData()->Size.x, m_Body->GetBodyData()->Size.y }, 

@@ -1,5 +1,6 @@
 #include "Texture.h"
 
+
 namespace Freeze
 {
     Texture::Texture()
@@ -41,6 +42,16 @@ namespace Freeze
       glBindTexture(GL_TEXTURE_2D, m_TextureID);
     }
 
+    void Texture::RenderTexture()
+    {
+      float vertices[] = {
+        0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f,   // top right
+        0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f,   // bottom right
+        -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f,   // bottom left
+        -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f    // top left 
+    };
+}
+
     void Texture::UnbindTexture() const
     {
       glBindTexture(GL_TEXTURE_2D, 0);
@@ -50,9 +61,6 @@ namespace Freeze
     {
       if (m_ImageData != nullptr) {
         stbi_image_free(m_ImageData);
-        FZ_INFO("Freed image data for texture {}", m_FilePath);
-      } else {
-        FZ_ERROR("Texture image data was already freed or not loaded!");
       }
     }
 };
