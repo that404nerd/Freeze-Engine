@@ -59,8 +59,7 @@ namespace Freeze
 
     Texture::~Texture()
     {
-      if (m_ImageData != nullptr) {
+      if (m_ImageData != nullptr)
         stbi_image_free(m_ImageData);
-      }
     }
 };
