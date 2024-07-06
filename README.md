@@ -22,7 +22,11 @@ cmake --build . -j5
 ```
 Since the clangd lsp server requires the compile_commands.json for finding header files and correct linking use the above commands.
 
-Instructions: (Not For Neovim LSP Users!!!)
+### NixOS Users:
+Follow the above instructions to clone the project and go to the project directory. From there, run `nix develop` and the build the project as mentioned above.
+The flake.nix has all the dependencies required for the project to run.
+
+### Instructions: (Not For Neovim LSP Users!!!)
 ```bash
 git clone --recursive https://github.com/systemcoding/Freeze-Engine
 cd Freeze-Engine/
