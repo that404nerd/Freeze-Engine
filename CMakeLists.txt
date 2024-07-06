@@ -22,7 +22,7 @@ set(SOURCES ${SOURCES} ${IMGUI_BACKEND_FILES})
 
 # Create the root_dir.h file
 file(WRITE "engine/src/core/root_dir.h" "#pragma once\n\n#include <string>\n\n")
-file(APPEND "engine/src/core/root_dir.h" "inline std::string rootDir = \"${CMAKE_SOURCE_DIR}/\";\n")
+file(APPEND "engine/src/core/root_dir.h" "inline constexpr auto rootDir = \"${CMAKE_SOURCE_DIR}/\";\n")
 
 # Include OpenGL
 find_package(OpenGL REQUIRED)
@@ -46,6 +46,7 @@ include_directories(lib/stb_image/include)
 include_directories(lib/imgui)
 
 # Include glm
+add_subdirectory(lib/glm)
 include_directories(lib/glm)
 
 # Include ImGuiFileDialog
@@ -66,7 +67,7 @@ include_directories(engine/src)
 add_executable(Sandbox ${SOURCES} ${IMGUI_SOURCES} ${IMGUI_BACKEND_SOURCES} ${SOLOUD_SOURCES})
 
 # Link libraries
-target_link_libraries(Sandbox ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} glfw box2d soloud)
+target_link_libraries(Sandbox PRIVATE ${OPENGL_LIBRARIES} ${GLEW_LIBRARIES} glfw box2d soloud glm)
 
 # Set build configurations
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
