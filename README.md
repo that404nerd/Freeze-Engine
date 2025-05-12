@@ -1,6 +1,8 @@
 # Freeze Engine
 Freeze Engine - A Small Game Engine Made Using C++ and OpenGL
 
+## UPDATE: I DIDN'T ABANDON THIS PROJECT. I WILL RESUME IT IN PROBABLY 10 DAYS. 
+
 ## How To Run?
 This engine only supports linux for now (I will extend this to windows and etc...). If you are running Linux make sure you have:
 - glew
