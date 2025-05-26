@@ -1,7 +1,7 @@
 #pragma once
 
 #include <GL/glew.h>
-#include "stb/stb_image.h"
+#include "stb_image.h"
 #include "core/Core.h"
 
 #include <string>

@@ -85,7 +85,7 @@ namespace Freeze
   bool Application::InitGLEW()
   {
     GLenum err = glewInit();
-    if (!glewInit())
+    if (glewInit() != GLEW_OK)
     {
       FZ_ERROR("GLEW failed to initialise");
       FZ_EXIT();

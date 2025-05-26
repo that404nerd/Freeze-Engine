@@ -14,8 +14,7 @@
     #ifdef __linux__
         #define FZ_ASSERT(x, ...) {FZ_ERROR(); raise(SIGTRAP);}
     #else
-        // For MSVC
-        #define FZ_ASSERT(x, ...) {FZ_ERROR(); __debugbreak();}
+        #error "Unsupported OS"
     #endif
 
     #define FZ_EXIT() {exit(0);}
@@ -29,8 +28,7 @@
         #define FZ_ASSERTM(x, ...) {FZ_ERROR(x, ##__VA_ARGS__); raise(SIGTRAP);}
         #define FZ_ASSERT(x) { FZ_ERROR(x); raise(SIGTRAP); }
     #else
-        // For MSVC
-        #define FZ_ASSERT(x, ...) {FZ_ERROR(x, ##__VA_ARGS__); __debugbreak();}
+        #error "Unsupported OS"
     #endif
 
     #define FZ_EXIT() {FZ_INFO("Called Exit Function"); exit(0);}
@@ -47,18 +45,14 @@ namespace Freeze {
             return newFilePath;
         }
       
-        // A shitty function that returns the name of the OS (uses macros but it works)
+        // A shitty function that returns the name of the OS that uses macros
         static const char* GetOSName()
         {
-          #if defined(_WIN32) || defined(_WIN64)
-            #error "Windows is not supported!"
-          #else
-            #ifdef __linux
+          #ifdef __linux
               const char* os = "Linux";
               return os;
           #else
             #error "Unknown OS!"
-          #endif
           #endif
           
         }

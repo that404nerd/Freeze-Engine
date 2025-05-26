@@ -6,56 +6,57 @@ namespace Freeze {
     
     ////////////////////// DYNAMIC BODY ///////////////////////
     DynamicBody::DynamicBody(const std::string& bodyID)
-      : m_Friction(0.0f), m_Density(0.0f), m_Restitution(0.0f), m_DefDirection(BODY_DIRECTION::RIGHT), m_BodyID(bodyID)
+      : m_Friction(0.0f), m_Density(0.0f), m_Restitution(0.0f), /* m_DefDirection(BODY_DIRECTION::RIGHT) */ m_BodyID(bodyID)
     {
     }
 
-    void DynamicBody::CreateBody(const b2Vec2& size, const b2Vec2& position, float rotation) {
-      // Create a new DynamicBodyData instance
-      auto dynamicBodyData = std::make_shared<DynamicBodyData>();
+    b2Body* DynamicBody::CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation) {
+
+      auto& physicsEntity = PhysicsModule::GetPhysicsEntManager().CreateEntity();
+      auto& physicsComponentType = PhysicsModule::GetPhysicsEntManager().AddComponent<Freeze::PhysicsComponent>(physicsEntity);
 
       // Initialize size and position
-      dynamicBodyData->Size = size;
-      dynamicBodyData->Positions = position;
-      dynamicBodyData->Rotation = rotation;
+      physicsComponentType.Size = size;
+      physicsComponentType.Positions = positions;
+      physicsComponentType.Rotation = rotation;
 
       // Calculate half body size
       b2Vec2 halfBodySize = b2Vec2(size.x * 0.5f, size.y * 0.5f);
 
       // Configure body definition
-      dynamicBodyData->BodyDef.type = b2_dynamicBody;
-      dynamicBodyData->BodyDef.position = dynamicBodyData->Positions;
-      dynamicBodyData->BodyDef.angle = dynamicBodyData->Rotation;
+      GetPhysicsBodyDataInst()->BodyDef.type = b2_dynamicBody;
+      GetPhysicsBodyDataInst()->BodyDef.position = physicsComponentType.Positions;
+      GetPhysicsBodyDataInst()->BodyDef.angle = physicsComponentType.Rotation;
 
-      dynamicBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&dynamicBodyData->BodyDef);
+      GetPhysicsBodyDataInst()->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&GetPhysicsBodyDataInst()->BodyDef);
       // Set shape as a box
-      dynamicBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y);
+      GetPhysicsBodyDataInst()->Shape.SetAsBox(halfBodySize.x, halfBodySize.y);
 
       // Configure fixture definition
-      dynamicBodyData->FixtureDef.shape = &dynamicBodyData->Shape;
-      dynamicBodyData->FixtureDef.density = m_Density;
-      dynamicBodyData->FixtureDef.friction = m_Friction;
-      dynamicBodyData->FixtureDef.restitution = m_Restitution;
+      GetPhysicsBodyDataInst()->FixtureDef.shape = &GetPhysicsBodyDataInst()->Shape;
+      GetPhysicsBodyDataInst()->FixtureDef.density = m_Density;
+      GetPhysicsBodyDataInst()->FixtureDef.friction = m_Friction;
+      GetPhysicsBodyDataInst()->FixtureDef.restitution = m_Restitution;
 
       // Create fixture
-      dynamicBodyData->Body->CreateFixture(&dynamicBodyData->FixtureDef);
+      GetPhysicsBodyDataInst()->Body->CreateFixture(&GetPhysicsBodyDataInst()->FixtureDef);
+      GetPhysicsBodyDataInst()->BodyID = m_BodyID;
 
-      dynamicBodyData->BodyID = m_BodyID;
+      physicsComponentType.Body = GetPhysicsBodyDataInst()->Body;
 
-      m_Current = dynamicBodyData;
-      m_BodyData.push_back(dynamicBodyData);
+      return GetPhysicsBodyDataInst()->Body;
     }
 
-    void DynamicBody::MoveBody(const b2Vec2& force, BODY_DIRECTION direction)
-    {
-      m_Current->Body->SetAwake(true); // When body goes to sleep, moving the body causes some issues
-      m_Current->Body->ApplyForce(force, m_Current->Body->GetWorldCenter(), m_Current->Body->IsAwake());
-
-      if(direction == BODY_DIRECTION::NONE) 
-        m_CurrentDirection = m_DefDirection;
-      else
-        m_CurrentDirection = direction;
-    }
+    // void DynamicBody::MoveBody(const b2Vec2& force, BODY_DIRECTION direction)
+    // {
+      // m_Current->Body->SetAwake(true); // When body goes to sleep, moving the body causes some issues
+      // m_Current->Body->ApplyForce(force, m_Current->Body->GetWorldCenter(), m_Current->Body->IsAwake());
+      //
+      // if(direction == BODY_DIRECTION::NONE) 
+      //   m_CurrentDirection = m_DefDirection;
+      // else
+      //   m_CurrentDirection = direction;
+    // }
 
     DynamicBody::~DynamicBody()
     {
@@ -67,29 +68,30 @@ namespace Freeze {
     {
     }
 
-    void StaticBody::CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation)
+    b2Body* StaticBody::CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation)
     {
-      auto staticBodyData = std::make_shared<StaticBodyData>();
+      auto& physicsEntity = PhysicsModule::GetPhysicsEntManager().CreateEntity();
+      auto& physicsComponentType = PhysicsModule::GetPhysicsEntManager().AddComponent<Freeze::PhysicsComponent>(physicsEntity);
 
-      staticBodyData->Size = size;
-      staticBodyData->Positions = positions;
-      staticBodyData->Rotation = rotation;
+      // Initialize size and position
+      physicsComponentType.Size = size;
+      physicsComponentType.Positions = positions;
+      physicsComponentType.Rotation = rotation;
 
       b2Vec2 halfBodySize = b2Vec2(size.x * 0.5f, size.y * 0.5f);
 
-      staticBodyData->BodyDef.type = b2_staticBody;
-      staticBodyData->BodyDef.position = staticBodyData->Positions;
-      staticBodyData->BodyDef.angle = staticBodyData->Rotation;
+      GetPhysicsBodyDataInst()->BodyDef.type = b2_staticBody;
+      GetPhysicsBodyDataInst()->BodyDef.position = physicsComponentType.Positions;
+      GetPhysicsBodyDataInst()->BodyDef.angle = physicsComponentType.Rotation;
       
-      staticBodyData->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&staticBodyData->BodyDef);
-      staticBodyData->Shape.SetAsBox(halfBodySize.x, halfBodySize.y, b2Vec2(0.0f, 0.0f), 0.0f);
+      GetPhysicsBodyDataInst()->Body = PhysicsModule::GetPhysicsWorld()->CreateBody(&GetPhysicsBodyDataInst()->BodyDef);
+      GetPhysicsBodyDataInst()->Shape.SetAsBox(halfBodySize.x, halfBodySize.y, b2Vec2(0.0f, 0.0f), 0.0f);
 
-      staticBodyData->Body->CreateFixture(&staticBodyData->Shape, 0.0f);
-      
-      m_Current = staticBodyData;
+      GetPhysicsBodyDataInst()->Body->CreateFixture(&GetPhysicsBodyDataInst()->Shape, 0.0f);
 
-      m_Current->BodyID = m_BodyID;
-      m_BodyData.push_back(staticBodyData); 
+      physicsComponentType.Body = GetPhysicsBodyDataInst()->Body;
+
+      return GetPhysicsBodyDataInst()->Body;
     }
 
     StaticBody::~StaticBody()

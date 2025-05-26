@@ -1,7 +1,4 @@
 #include "Renderer2D.h"
-#include "renderer/Buffer.h"
-#include "renderer/Shader.h"
-#include <glm/ext/matrix_transform.hpp>
 
 // TODO: Call Flush() at the end of a scene and creation of scenes
 

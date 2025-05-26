@@ -1,4 +1,6 @@
 #include "Sandbox.h"
+#include "core/Entity.h"
+#include "physics/InitPhysics.h"
 
 Sandbox::Sandbox() : m_Camera(std::make_shared<Freeze::Camera>((glm::vec4(-20.0f, 20.0f, -12.0f, 12.0f)))) {}
 
@@ -6,15 +8,14 @@ void Sandbox::OnInit()
 {
   Freeze::EnableOpenGLDebug();
   
-  m_Body->SetFriction(0.3f);
   m_Body->SetDensity(0.3f);
   m_Body->CreateBody({ 2.0f, 2.0f }, { 1.0f, 5.0f }, 45.0f);
 
   Freeze::Audio::LoadAudioFile(Freeze::Utils::GetFilePath("sandbox/assets/music/e1m1_doom.wav"));
 
-  m_Texture->CreateTexture();
-  m_Texture->LoadTextureFile(Freeze::Utils::GetFilePath("sandbox/assets/textures/block.png"));
-  m_Texture->BindTexture();
+  // m_Texture->CreateTexture();
+  // m_Texture->LoadTextureFile(Freeze::Utils::GetFilePath("sandbox/assets/textures/block.png"));
+  // m_Texture->BindTexture();
 
   m_PlatformBody->CreateBody({ 200.0f, 1.0f }, { 0.0f, -1.0f });
 }
@@ -57,27 +58,33 @@ void Sandbox::OnImGui()
   ImGui::Dummy(ImVec2(0.0f, 10.0f));
   ImGui::Text("OS: %s", Freeze::Utils::GetOSName());
   ImGui::Text("GPU: %s, %s", vendor, renderer);
+  
+  ImGui::Dummy(ImVec2(0.0f, 10.0f));
 
   ImGui::End();
 }
 
 void Sandbox::OnUpdate(float dt)
 {
-  float entityRotation = m_Body->GetBody()->GetAngle();
+  float bodyRotation = m_Body->GetBody()->GetAngle();
   float platformRotation = m_PlatformBody->GetBody()->GetAngle();
 
+  auto view = Freeze::Physics::PhysicsModule::GetPhysicsEntManager().GetRegistry().view<Freeze::PhysicsComponent>(); // WTF???
+  
+  for(auto entity : view)
+  {
+    auto& physComp = view.get<Freeze::PhysicsComponent>(entity);
+    if (!physComp.Body) continue; 
 
-  Freeze::Renderer2D::DrawRotatedQuad({ m_Body->GetBody()->GetPosition().x, m_Body->GetBody()->GetPosition().y }, 
-                                      { m_Body->GetBodyData()->Size.x, m_Body->GetBodyData()->Size.y }, 
-                                      entityRotation,
-                                      { 0.6f, 0.1f, 0.3f, 1.0f });
+    physComp.Positions = physComp.Body->GetPosition();
+    physComp.Rotation = physComp.Body->GetAngle();
 
-  Freeze::Renderer2D::DrawRotatedQuad({ m_PlatformBody->GetBody()->GetPosition().x, m_PlatformBody->GetBody()->GetPosition().y }, 
-                                      { m_PlatformBody->GetBodyData()->Size.x, m_PlatformBody->GetBodyData()->Size.y }, 
-                                      platformRotation,
-                                      { 0.3f, 0.2f, 0.5f, 1.0f });
-
-  Freeze::Renderer2D::DrawTriangle({ 5.0f, 1.0f }, { 1.0f, 1.0f }, { 0.2f, 0.3f, 0.1f, 1.0f });
+    Freeze::Renderer2D::DrawRotatedQuad({ physComp.Positions.x, physComp.Positions.y },
+                                        { physComp.Size.x, physComp.Size.y },
+                                        physComp.Rotation, 
+                                        { 0.3f, 0.2f, 0.5f, 1.0f });
+  }
+  
   Freeze::Renderer2D::Flush();
 }
 

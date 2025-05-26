@@ -12,7 +12,6 @@
 #include "renderer/Camera.h"
 #include "renderer/Renderer2D.h"
 #include "core/Window.h"
-
 #include "core/AudioSystem.h"
 
 #include "physics/PhysicsBody.h"
@@ -36,7 +35,6 @@ private:
 
     std::shared_ptr<Freeze::Camera> m_Camera = std::make_shared<Freeze::Camera>();
     std::shared_ptr<Freeze::Texture> m_Texture = std::make_shared<Freeze::Texture>();
-
 
     bool showColliders = false;
 

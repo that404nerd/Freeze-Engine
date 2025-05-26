@@ -28,10 +28,10 @@ namespace Freeze {
 	public:
 		WindowCloseEvent() = default;
 
-        std::string GetEventType() const override
-        {
-			return ToString(EventTypes::WindowCloseEvent);
-        }
+    std::string GetEventType() const override
+    {
+      return ToString(EventTypes::WindowCloseEvent);
+    }
 
 		SET_EVENT_TYPE(WindowCloseEvent)
 	};

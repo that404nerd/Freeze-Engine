@@ -10,6 +10,7 @@
 #include "Box2DDebugRenderer.h"
 #include "renderer/Buffer.h"
 #include "renderer/Renderer2D.h"
+#include "./core/Entity.h"
 
 namespace Freeze
 {
@@ -18,6 +19,10 @@ namespace Freeze
         {
             inline b2World* m_PhysicsWorld = nullptr;
             inline Box2DDebugRenderer* m_DebugRenderer;
+
+            inline auto& m_PhysicsEntManager = EntityManager::GetEntityManagerInstance();
+
+            inline auto& GetPhysicsEntManager() { return m_PhysicsEntManager; }
 
             inline void InitPhysicsWorld()
             {

@@ -1,14 +1,15 @@
 #pragma once
 
 #include <box2d/box2d.h>
+#include "entt/entt.hpp"
 
+#include <memory>
 #include <vector>
 #include <string>
 
 #include "renderer/Renderer2D.h"
 #include "core/Core.h"
 #include "InitPhysics.h"
-
 #include "event/KeyboardInput.h"
 
 namespace Freeze {
@@ -16,48 +17,48 @@ namespace Freeze {
     
     // Interface for other physics body types
     class PhysicsBody {
-    public:
-      virtual void CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation) = 0;
-      virtual ~PhysicsBody() {}
-    };
-
-    class DynamicBody : public PhysicsBody {
-
-    public:
-      enum class BODY_DIRECTION {
-        LEFT, RIGHT, TOP, DOWN, NONE
-      };
-
     private:
-      struct DynamicBodyData {
+
+      struct PhysicsBodyData {
         b2BodyDef BodyDef;
         b2Body* Body;
         b2FixtureDef FixtureDef;
         b2PolygonShape Shape;
 
         std::string BodyID;
-        b2Vec2 Positions = { 0.0f, 0.0f };
-        b2Vec2 Size = { 0.0f, 0.0f };
-        float Rotation = 0.0f;
       };
 
-      std::vector<std::shared_ptr<DynamicBodyData>> m_BodyData;
-      std::shared_ptr<DynamicBodyData> m_Current;
+    public:
+      virtual b2Body* CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation) = 0;
+      
+      std::shared_ptr<PhysicsBodyData> GetPhysicsBodyDataInst() { return m_PhysicsBodyData; }
+      virtual ~PhysicsBody() {};
+    protected:
+      std::shared_ptr<PhysicsBodyData> m_PhysicsBodyData = std::make_shared<PhysicsBodyData>();
+    };
 
+    class DynamicBody : public PhysicsBody {
+
+    // public:
+      // enum class BODY_DIRECTION {
+      //   LEFT, RIGHT, TOP, DOWN, NONE
+      // };
+
+    private:
       float m_Friction;
       float m_Density;
       float m_Restitution;
 
       std::string m_BodyID;
-      
-      BODY_DIRECTION m_DefDirection;
-      BODY_DIRECTION m_CurrentDirection;
+      //
+      // BODY_DIRECTION m_DefDirection;
+      // BODY_DIRECTION m_CurrentDirection;
 
     public:
       DynamicBody(const std::string& bodyID);
-      void CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation) override;
+      b2Body* CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation) override;
 
-      void MoveBody(const b2Vec2& force, BODY_DIRECTION direction);
+      // void MoveBody(const b2Vec2& force, BODY_DIRECTION direction);
 
     public:
       void SetFriction(float friction) { m_Friction = friction; }
@@ -68,8 +69,7 @@ namespace Freeze {
       float GetDensity() const { return m_Density; }
       float GetRestitution() const { return m_Restitution; } 
 
-      std::shared_ptr<DynamicBodyData> GetBodyData() { return m_Current; };
-      b2Body* GetBody() { return m_Current->Body; }
+      b2Body* GetBody() { return GetPhysicsBodyDataInst()->Body; }
 
       ~DynamicBody();
     };
@@ -77,29 +77,13 @@ namespace Freeze {
     class StaticBody : public PhysicsBody {
     public:
       StaticBody(const std::string& bodyID);
-      void CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation=0.0f) override;
+      b2Body* CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation=0.0f) override;
       ~StaticBody();
 
     private:
-      struct StaticBodyData {
-        b2BodyDef BodyDef;
-        b2Body* Body;
-        b2FixtureDef FixtureDef;
-        b2PolygonShape Shape;
-        std::string BodyID; // Only for debugging
-
-        b2Vec2 Positions = { 0.0f, 0.0f };
-        b2Vec2 Size = { 0.0f, 0.0f };
-        float Rotation = 0.0f;
-      };
-
-      std::vector<std::shared_ptr<StaticBodyData>> m_BodyData;
-      std::shared_ptr<StaticBodyData> m_Current;
-
       std::string m_BodyID;
     public:
-      std::shared_ptr<StaticBodyData> GetBodyData() { return m_Current; }
-      b2Body* GetBody() { return m_Current->Body; }
+      b2Body* GetBody() { return GetPhysicsBodyDataInst()->Body; }
     };
   };
 };

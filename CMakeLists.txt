@@ -8,6 +8,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}/bin")
 
 # Add sandbox source files
 file(GLOB_RECURSE SOURCES "sandbox/src/*.cpp" "engine/src/*.cpp")
+list(APPEND SOURCES engine/src/stb_image.cpp)
 
 # Add external dependencies
 file(GLOB IMGUI_SOURCES "lib/imgui/*.cpp")
@@ -40,7 +41,7 @@ include_directories(${GLFW_INCLUDE_DIRS})
 include_directories(lib/spdlog/include)
 
 # Include stb_image
-include_directories(lib/stb_image/include)
+include_directories(lib/stb)
 
 # Include imgui
 include_directories(lib/imgui)
@@ -49,9 +50,6 @@ include_directories(lib/imgui)
 add_subdirectory(lib/glm)
 include_directories(lib/glm)
 
-# Include ImGuiFileDialog
-include_directories(lib/ImGuiFileDialog)
-
 # Include box2d
 add_subdirectory(lib/box2d)
 include_directories(lib/box2d/include)
@@ -59,6 +57,10 @@ include_directories(lib/box2d/include)
 # Include SoLoud
 add_subdirectory(lib/soloud)
 include_directories(lib/soloud/include)
+
+# Include Entt
+add_subdirectory(lib/entt)
+include_directories(lib/entt/single_include)
 
 # Include Engine files
 include_directories(engine/src)
