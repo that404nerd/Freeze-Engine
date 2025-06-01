@@ -18,12 +18,12 @@ namespace Freeze {
     public:
         KeyPressEvent(int keycode) : KeyEvent(keycode) {};
 
-        std::string GetEventType() const override
+        uint32_t GetEventType() const override
         {
-			return ToString(EventTypes::KeyPressEvent);
+          return ToEventType(EventTypes::KeyPressEvent);
         }
 
-		SET_EVENT_TYPE(KeyPressEvent)
+        SET_EVENT_TYPE(KeyPressEvent)
     };
 
     class KeyRepeatEvent : public KeyEvent {
@@ -31,14 +31,14 @@ namespace Freeze {
         KeyRepeatEvent(int keycode, bool isRepeated = false) 
             : KeyEvent(keycode), m_IsRepeated(isRepeated) {};
 
-        std::string GetEventType() const override
+        uint32_t GetEventType() const override
         {
-			return ToString(EventTypes::KeyRepeatEvent);
+          return ToEventType(EventTypes::KeyRepeatEvent);
         }
 
         bool IsRepeated() { return m_IsRepeated; }
 
-		SET_EVENT_TYPE(KeyRepeatEvent)
+        SET_EVENT_TYPE(KeyRepeatEvent)
     private:
         bool m_IsRepeated;
     };
@@ -47,12 +47,12 @@ namespace Freeze {
     public:
         KeyReleaseEvent(int keycode) : KeyEvent(keycode) {};
 
-        std::string GetEventType() const override
+        uint32_t GetEventType() const override
         {
-			return ToString(EventTypes::KeyReleaseEvent);
+          return ToEventType(EventTypes::KeyReleaseEvent);
         }
 
-		SET_EVENT_TYPE(KeyReleaseEvent)
+        SET_EVENT_TYPE(KeyReleaseEvent)
     };
 
 };

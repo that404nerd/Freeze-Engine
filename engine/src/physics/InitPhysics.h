@@ -19,6 +19,7 @@ namespace Freeze
         {
             inline b2World* m_PhysicsWorld = nullptr;
             inline Box2DDebugRenderer* m_DebugRenderer;
+            inline b2Vec2 GRAVITY = b2Vec2(0.0f, -9.8f);
 
             inline auto& m_PhysicsEntManager = EntityManager::GetEntityManagerInstance();
 
@@ -28,10 +29,8 @@ namespace Freeze
             {
                 FZ_INFO("Physics API Initialised");
 
-                b2Vec2 gravity(0.0f, -9.8f);
-
                 if(m_PhysicsWorld == nullptr)
-                    m_PhysicsWorld = new b2World(gravity);
+                    m_PhysicsWorld = new b2World(GRAVITY);
                 else
                     FZ_ASSERT("Physics intialised again!");
 

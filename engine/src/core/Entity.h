@@ -9,6 +9,7 @@
 
 #include "entt/entt.hpp"
 #include "box2d/box2d.h"
+#include <glm/glm.hpp>
 
 namespace Freeze {
 
@@ -18,11 +19,14 @@ namespace Freeze {
     b2Vec2 Positions = { 0.0f, 0.0f };
     b2Vec2 Size = { 0.0f, 0.0f };
     float Rotation = 0.0f;
-
-    b2Body* Body = nullptr;
+    
+    float Density = 0.5f, Friction = 0.0f, Restitution = 0.5f; // These are the default values of the properties.
+    glm::vec4 Color; // Temporary
+    b2Body* Body;
   };
-
+  
   class EntityManager {
+
   public:
     
     static EntityManager& GetEntityManagerInstance() 
@@ -66,6 +70,7 @@ namespace Freeze {
 
     entt::registry m_Registry;
     entt::entity m_CurrentEntity;
+    std::string m_ComponentTag;
   };
 
 };

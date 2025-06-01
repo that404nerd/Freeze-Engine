@@ -17,9 +17,9 @@ namespace Freeze {
     public:
         MouseClickEvent(int keycode) : MouseEvent(keycode) {};
 
-        std::string GetEventType() const override
+        uint32_t GetEventType() const override
         {
-			return ToString(EventTypes::MouseClickEvent);
+          return ToEventType(EventTypes::MouseClickEvent);
         } 
 
         SET_EVENT_TYPE(MouseClickEvent)
@@ -29,9 +29,9 @@ namespace Freeze {
     public:
         MouseReleaseEvent(int keycode) : MouseEvent(keycode) {};
 
-        std::string GetEventType() const override
+        uint32_t GetEventType() const override
         {
-			return ToString(EventTypes::MouseReleaseEvent);
+          return ToEventType(EventTypes::MouseReleaseEvent);
         }
 
         SET_EVENT_TYPE(MouseReleaseEvent)

@@ -10,10 +10,12 @@ namespace Freeze {
     {
     }
 
-    b2Body* DynamicBody::CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation) {
+    void DynamicBody::CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation, glm::vec4 color) {
 
-      auto& physicsEntity = PhysicsModule::GetPhysicsEntManager().CreateEntity();
-      auto& physicsComponentType = PhysicsModule::GetPhysicsEntManager().AddComponent<Freeze::PhysicsComponent>(physicsEntity);
+      m_PhysicsBodyData->PhysicsEntity = PhysicsModule::GetPhysicsEntManager().CreateEntity();
+
+      // Refering to PhysicsEntManager since naming it just EntManager is kinda confusing so whatever...
+      auto& physicsComponentType = PhysicsModule::GetPhysicsEntManager().AddComponent<Freeze::PhysicsComponent>(m_PhysicsBodyData->PhysicsEntity);
 
       // Initialize size and position
       physicsComponentType.Size = size;
@@ -34,9 +36,9 @@ namespace Freeze {
 
       // Configure fixture definition
       GetPhysicsBodyDataInst()->FixtureDef.shape = &GetPhysicsBodyDataInst()->Shape;
-      GetPhysicsBodyDataInst()->FixtureDef.density = m_Density;
-      GetPhysicsBodyDataInst()->FixtureDef.friction = m_Friction;
-      GetPhysicsBodyDataInst()->FixtureDef.restitution = m_Restitution;
+      GetPhysicsBodyDataInst()->FixtureDef.density = physicsComponentType.Density;
+      GetPhysicsBodyDataInst()->FixtureDef.friction = physicsComponentType.Friction;
+      GetPhysicsBodyDataInst()->FixtureDef.restitution = physicsComponentType.Restitution;
 
       // Create fixture
       GetPhysicsBodyDataInst()->Body->CreateFixture(&GetPhysicsBodyDataInst()->FixtureDef);
@@ -44,19 +46,9 @@ namespace Freeze {
 
       physicsComponentType.Body = GetPhysicsBodyDataInst()->Body;
 
-      return GetPhysicsBodyDataInst()->Body;
-    }
+      physicsComponentType.Color = color;
 
-    // void DynamicBody::MoveBody(const b2Vec2& force, BODY_DIRECTION direction)
-    // {
-      // m_Current->Body->SetAwake(true); // When body goes to sleep, moving the body causes some issues
-      // m_Current->Body->ApplyForce(force, m_Current->Body->GetWorldCenter(), m_Current->Body->IsAwake());
-      //
-      // if(direction == BODY_DIRECTION::NONE) 
-      //   m_CurrentDirection = m_DefDirection;
-      // else
-      //   m_CurrentDirection = direction;
-    // }
+    }
 
     DynamicBody::~DynamicBody()
     {
@@ -68,10 +60,10 @@ namespace Freeze {
     {
     }
 
-    b2Body* StaticBody::CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation)
+    void StaticBody::CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation, glm::vec4 color)
     {
-      auto& physicsEntity = PhysicsModule::GetPhysicsEntManager().CreateEntity();
-      auto& physicsComponentType = PhysicsModule::GetPhysicsEntManager().AddComponent<Freeze::PhysicsComponent>(physicsEntity);
+      m_PhysicsBodyData->PhysicsEntity = PhysicsModule::GetPhysicsEntManager().CreateEntity();
+      auto& physicsComponentType = PhysicsModule::GetPhysicsEntManager().AddComponent<Freeze::PhysicsComponent>(m_PhysicsBodyData->PhysicsEntity);
 
       // Initialize size and position
       physicsComponentType.Size = size;
@@ -91,7 +83,8 @@ namespace Freeze {
 
       physicsComponentType.Body = GetPhysicsBodyDataInst()->Body;
 
-      return GetPhysicsBodyDataInst()->Body;
+      physicsComponentType.Color = color;
+
     }
 
     StaticBody::~StaticBody()

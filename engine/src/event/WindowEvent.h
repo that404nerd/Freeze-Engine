@@ -13,9 +13,9 @@ namespace Freeze {
 		uint32_t GetWidth() const { return m_Width; }
 		uint32_t GetHeight() const { return m_Height; }
 
-		std::string GetEventType() const override
+		uint32_t GetEventType() const override
 		{
-			return ToString(EventTypes::WindowResizeEvent);
+			return ToEventType(EventTypes::WindowResizeEvent);
 		}
 
 		SET_EVENT_TYPE(WindowResizeEvent)
@@ -28,9 +28,9 @@ namespace Freeze {
 	public:
 		WindowCloseEvent() = default;
 
-    std::string GetEventType() const override
+    uint32_t GetEventType() const override
     {
-      return ToString(EventTypes::WindowCloseEvent);
+      return ToEventType(EventTypes::WindowCloseEvent);
     }
 
 		SET_EVENT_TYPE(WindowCloseEvent)

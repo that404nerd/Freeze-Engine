@@ -12,6 +12,14 @@ namespace Freeze {
     return false;
   }
 
+  bool KeyboardInput::IsKeyReleased(int scancode)
+  {
+    if(glfwGetKey(Window::GetWindowInstance(), scancode) == GLFW_RELEASE)
+      return true;
+    
+    return false;
+  }
+
   bool KeyboardInput::IsKeyRepeated(int scancode) 
   {
     if (glfwGetKey(Window::GetWindowInstance(), scancode) == GLFW_REPEAT) 

@@ -10,6 +10,7 @@ namespace Freeze {
         KeyboardInput() = default;
 
         static bool IsKeyPressed(int scancode);
+        static bool IsKeyReleased(int scancode);
         static bool IsKeyRepeated(int scancode);
 
         ~KeyboardInput();

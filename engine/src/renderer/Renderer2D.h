@@ -7,10 +7,7 @@
 #include "Camera.h"
 #include "core/Core.h"
 #include "Texture.h"
-#include "renderer/Buffer.h"
-#include "renderer/Shader.h"
 
-#include <glm/ext/matrix_transform.hpp>
 #include <memory>
 
 namespace Freeze {
@@ -24,6 +21,7 @@ namespace Freeze {
 
   // Batch Rendering
   class Renderer2D {
+
   public:
     static void InitRenderer();
 
