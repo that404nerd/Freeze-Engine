@@ -1,21 +1,18 @@
 #include "PhysicsBody.h"
+#include <typeinfo>
 
 namespace Freeze {
 
   namespace Physics {
     
     ////////////////////// DYNAMIC BODY ///////////////////////
-    DynamicBody::DynamicBody(const std::string& bodyID)
-      : m_Friction(0.0f), m_Density(0.0f), m_Restitution(0.0f), /* m_DefDirection(BODY_DIRECTION::RIGHT) */ m_BodyID(bodyID)
-    {
-    }
 
     void DynamicBody::CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation, glm::vec4 color) {
 
-      m_PhysicsBodyData->PhysicsEntity = PhysicsModule::GetPhysicsEntManager().CreateEntity();
+      GetPhysicsBodyDataInst()->PhysicsEntity = PhysicsModule::GetPhysicsEntManager().CreateEntity();
 
       // Refering to PhysicsEntManager since naming it just EntManager is kinda confusing so whatever...
-      auto& physicsComponentType = PhysicsModule::GetPhysicsEntManager().AddComponent<Freeze::PhysicsComponent>(m_PhysicsBodyData->PhysicsEntity);
+      auto& physicsComponentType = PhysicsModule::GetPhysicsEntManager().AddComponent<Freeze::PhysicsComponent>(GetPhysicsBodyDataInst()->PhysicsEntity);
 
       // Initialize size and position
       physicsComponentType.Size = size;
@@ -42,28 +39,19 @@ namespace Freeze {
 
       // Create fixture
       GetPhysicsBodyDataInst()->Body->CreateFixture(&GetPhysicsBodyDataInst()->FixtureDef);
-      GetPhysicsBodyDataInst()->BodyID = m_BodyID;
-
-      physicsComponentType.Body = GetPhysicsBodyDataInst()->Body;
+      GetPhysicsBodyDataInst()->BodyID = GetPhysicsBodyDataInst()->BodyID; // Set the Body ID
 
       physicsComponentType.Color = color;
 
+      GetPhysicsBodyDataInst()->Body->GetUserData().pointer = reinterpret_cast<uintptr_t>(GetPhysicsBodyDataInst().get());
+      physicsComponentType.RuntimeBody = GetPhysicsBodyDataInst()->Body;
     }
 
-    DynamicBody::~DynamicBody()
-    {
-    }
-    
-    /////////////////////// STATIC BODY ////////////////////
-    StaticBody::StaticBody(const std::string& bodyID)
-      : m_BodyID(bodyID)
-    {
-    }
 
     void StaticBody::CreateBody(const b2Vec2& size, const b2Vec2& positions, float rotation, glm::vec4 color)
     {
-      m_PhysicsBodyData->PhysicsEntity = PhysicsModule::GetPhysicsEntManager().CreateEntity();
-      auto& physicsComponentType = PhysicsModule::GetPhysicsEntManager().AddComponent<Freeze::PhysicsComponent>(m_PhysicsBodyData->PhysicsEntity);
+      GetPhysicsBodyDataInst()->PhysicsEntity = PhysicsModule::GetPhysicsEntManager().CreateEntity();
+      auto& physicsComponentType = PhysicsModule::GetPhysicsEntManager().AddComponent<Freeze::PhysicsComponent>(GetPhysicsBodyDataInst()->PhysicsEntity);
 
       // Initialize size and position
       physicsComponentType.Size = size;
@@ -81,16 +69,11 @@ namespace Freeze {
 
       GetPhysicsBodyDataInst()->Body->CreateFixture(&GetPhysicsBodyDataInst()->Shape, 0.0f);
 
-      physicsComponentType.Body = GetPhysicsBodyDataInst()->Body;
-
       physicsComponentType.Color = color;
 
+      GetPhysicsBodyDataInst()->Body->GetUserData().pointer = reinterpret_cast<uintptr_t>(GetPhysicsBodyDataInst().get());
+      physicsComponentType.RuntimeBody = GetPhysicsBodyDataInst()->Body;
     }
-
-    StaticBody::~StaticBody()
-    {
-    }
-
 
   }
 

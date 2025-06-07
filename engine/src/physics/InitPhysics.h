@@ -8,6 +8,7 @@
 
 #include "core/Core.h"
 #include "Box2DDebugRenderer.h"
+#include "physics/ContactListener.h"
 #include "renderer/Buffer.h"
 #include "renderer/Renderer2D.h"
 #include "./core/Entity.h"
@@ -18,7 +19,8 @@ namespace Freeze
         namespace PhysicsModule
         {
             inline b2World* m_PhysicsWorld = nullptr;
-            inline Box2DDebugRenderer* m_DebugRenderer;
+            inline Box2DDebugRenderer* m_DebugRenderer = nullptr;
+            inline ContactListener* m_ContactListener = nullptr;
             inline b2Vec2 GRAVITY = b2Vec2(0.0f, -9.8f);
 
             inline auto& m_PhysicsEntManager = EntityManager::GetEntityManagerInstance();
@@ -35,6 +37,9 @@ namespace Freeze
                     FZ_ASSERT("Physics intialised again!");
 
                 m_DebugRenderer = new Box2DDebugRenderer(b2Draw::e_shapeBit);
+                m_ContactListener = new ContactListener();
+
+                m_PhysicsWorld->SetContactListener(m_ContactListener);
                 m_PhysicsWorld->SetDebugDraw(m_DebugRenderer);
             }
 
@@ -52,6 +57,8 @@ namespace Freeze
                 delete m_DebugRenderer;
                 m_PhysicsWorld->SetDebugDraw(nullptr);
                 m_PhysicsWorld->ClearForces();
+
+                delete m_ContactListener;
 
                 delete m_PhysicsWorld;
             }

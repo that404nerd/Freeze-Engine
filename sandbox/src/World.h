@@ -1,5 +1,6 @@
 #pragma once
 
+#include "core/Entity.h"
 #include "physics/PhysicsBody.h"
 
 #include "Character.h"
@@ -20,17 +21,16 @@ public:
   void OnUpdate(float dt)
   {
     const auto view = Freeze::Physics::PhysicsModule::GetPhysicsEntManager().GetRegistry().view<Freeze::PhysicsComponent>(); // WTF???
-    
+
     m_Player->OnUpdate(dt, m_Camera);
 
     for(auto entity : view)
     {
       auto& physComp = view.get<Freeze::PhysicsComponent>(entity);
-      if (physComp.Body == nullptr) continue;
+      if (physComp.RuntimeBody == nullptr) continue;
 
-      physComp.Positions = physComp.Body->GetPosition();
-      physComp.Rotation = physComp.Body->GetAngle();
-
+      physComp.Positions = physComp.RuntimeBody->GetPosition();
+      physComp.Rotation = physComp.RuntimeBody->GetAngle();
 
       Freeze::Renderer2D::DrawRotatedQuad(
           { physComp.Positions.x, physComp.Positions.y },

@@ -1,4 +1,5 @@
 #include "Character.h"
+#include "core/Entity.h"
 
 void Player::OnInit()
 {
@@ -10,6 +11,8 @@ void Player::OnUpdate(float dt, Freeze::Camera& camera)
   b2Vec2 velocity = m_Body->GetBody()->GetLinearVelocity(); 
   b2Vec2 position = m_Body->GetBody()->GetPosition(); 
 
+  auto* data = reinterpret_cast<Freeze::PhysicsBodyData*>(m_Body->GetBody()->GetUserData().pointer);
+
   if(Freeze::KeyboardInput::IsKeyPressed(GLFW_KEY_D))
   {
     velocity.x += acc * dt;
@@ -20,12 +23,13 @@ void Player::OnUpdate(float dt, Freeze::Camera& camera)
     velocity.x *= 0.8f;
   }
 
-  if (Freeze::KeyboardInput::IsKeyPressed(GLFW_KEY_SPACE))
+  if (Freeze::KeyboardInput::IsKeyPressed(GLFW_KEY_SPACE) && data->isCollided)
   {
-      // This is your jump impulse, crank it up or down
-      float jumpImpulse = 2.0f;
-      m_Body->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0.0f, jumpImpulse), true);
+    float jumpImpulse = 10.0f;
+    m_Body->GetBody()->ApplyLinearImpulseToCenter(b2Vec2(0.0f, jumpImpulse), true);
   }
+
+  FZ_INFO("Collided: {}", data->isCollided);
 
   camera.SetPosition(glm::vec3(position.x, position.y, 0.0f));
 

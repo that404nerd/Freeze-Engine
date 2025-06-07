@@ -13,16 +13,28 @@
 
 namespace Freeze {
 
-
   struct PhysicsComponent
   {
     b2Vec2 Positions = { 0.0f, 0.0f };
     b2Vec2 Size = { 0.0f, 0.0f };
     float Rotation = 0.0f;
     
-    float Density = 0.5f, Friction = 0.0f, Restitution = 0.5f; // These are the default values of the properties.
+    float Density = 0.5f, Friction = 0.3f, Restitution = 0.0f; // These are the default values of the properties.
     glm::vec4 Color; // Temporary
+    b2Body* RuntimeBody;
+  };
+
+  struct PhysicsBodyData 
+  {
+    b2BodyDef BodyDef;
     b2Body* Body;
+    b2FixtureDef FixtureDef;
+    b2PolygonShape Shape;
+
+    std::string BodyID;
+    entt::entity PhysicsEntity = entt::null; 
+    bool isCollided = false;
+    b2Body* CollidedWith = nullptr;
   };
   
   class EntityManager {
